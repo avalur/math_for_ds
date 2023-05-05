@@ -1,0 +1,103 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\begin{document}
+
+\section*{Homework 1 (10 points max)}
+\begin{enumerate}
+  \item (1 point) Find the general solution and one particular solution of the system of linear equations using the Gaussian method:
+  \begin{align*}
+    \begin{cases}
+      -3x_1 + 6x_2 + 2x_3 - 5x_4 = -6, \\
+      2x_1 - 4x_2 + 2x_4 = 4, \\
+      3x_1 - 6x_2 - x_3 + 4x_4 = 6
+    \end{cases}
+  \end{align*}
+
+  \item (1 point) Explore the system and find the general solution depending on the value of the parameter $\lambda$:
+  \begin{align*}
+    \begin{cases}
+      (1 + \lambda)x_1 + x_2 + x_3 = 1, \\
+      x_1 + (1 + \lambda)x_2 + x_3 = \lambda, \\
+      x_1 + x_2 + (1 + \lambda)x_3 = \lambda^2
+    \end{cases}
+  \end{align*}
+
+  \item (2 points) Let the matrix $A \in M_{5\times6}(\mathbb{R})$ have the form
+  \begin{equation*}
+    A = \begin{pmatrix}
+      1 & x & 1 & 1 & x & 1 \\
+      x & 1 & x & x & 1 & x \\
+      x & 1 & 1 & 1 & 1 & x \\
+      1 & x & 1 & 1 & x & 1 \\
+      1 & 1 & x & x & 1 & 1
+    \end{pmatrix}
+  \end{equation*}
+  For the system $Ay = 0$, where $y \in \mathbb{R}^6$, find the number of main variables for any value of $x \in \mathbb{R}$.
+
+  \item Let the matrix $J(\lambda) \in M_n(\mathbb{R})$ have the following form\footnote{\textit{Note:} Such a matrix is called a Jordan block.}:
+  \begin{equation*}
+    J(\lambda) = \begin{pmatrix}
+      \lambda & 1      & 0         & \dots  & 0       \\
+      0       & \lambda & 1        & \dots  & 0       \\
+      0       & 0       & \lambda  & \ddots  & \vdots \\
+      \vdots  & \vdots  & \ddots & \ddots & 1 \\
+      0       & 0      &  \dots  & 0  & \lambda
+    \end{pmatrix}
+  \end{equation*}
+  \begin{enumerate}[label=(\alph*)]
+    \item (1 point) Find all $A \in M_n(\mathbb{R})$ such that $AJ(0) = J(0)A$.
+    \item (1 point) Prove that for any $k$, the formula holds
+    \begin{equation*}
+      J(\lambda)^k = \begin{pmatrix}
+        \lambda^k & C^1_{k}\lambda^{k-1} & C^2_{k}\lambda^{k-2} & \dots & C^{n-1}_{k}\lambda^{k-n+1} \\
+        0 & \lambda^k & C^1_{k}\lambda^{k-1} & \dots & C^{n-2}_{k}\lambda^{k-n+2} \\
+        0 & 0 & \lambda^k & \dots & \vdots \\
+        \vdots & \vdots & \ddots & \ddots & C^1_{k}\lambda^{k-1} \\
+        0 & 0 & \dots & 0 & \lambda^k
+      \end{pmatrix},
+    \end{equation*}
+    where $C^p_{k} = \frac{k!}{p!(k-p)!}$, and $k! = 1 \cdot 2 \cdot \hdots \cdot k$
+  \end{enumerate}
+
+  \item (1 point) Find the inverse matrix of the given matrix:
+  \begin{equation*}
+    \begin{pmatrix}
+      2 & 1 & 2 & 3 \\
+      0 & 1 & -1 & 0 \\
+      1 & 2 & 0 & 1 \\
+      0 & 1 & -2 & 0
+    \end{pmatrix}
+  \end{equation*}
+
+  \item (1 point) Calculate for any $n$:
+  \begin{equation*}
+    \left( 
+        \begin{pmatrix}
+            2 & 1 \\
+            5 & 3 
+        \end{pmatrix}        
+        \begin{pmatrix}
+            1 & 0 \\
+            1 & 1 
+        \end{pmatrix}        
+        \begin{pmatrix}
+            3 & -1 \\
+           -5 & 2
+        \end{pmatrix}                  
+    \right)^n
+  \end{equation*}
+
+  \item (2 points) Let $A \in M_n(\mathbb{R})$ be such that $A^m = 0$ for some $m$. 
+  Show that $E + A$ and $E - A$ are invertible, 
+  where $E \in M_n(\mathbb{R})$ is the identity matrix.
+\end{enumerate}
+
+\end{document}
