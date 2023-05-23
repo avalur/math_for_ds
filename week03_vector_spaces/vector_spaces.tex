@@ -1,0 +1,638 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+% \usepackage{animate}                                       % Для вставки видео в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+% \usepackage{media9}                                        % To include youtube video
+
+\usepackage{colortbl}
+% \usepackage{tcolorbox}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{1 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 3. Vector spaces, coordinates, rank}
+\author{Aleks Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{May 24, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+\begin{document}
+%\unitlength=2mm
+
+% выводим заглавие
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Concrete vs Abstract Vector Spaces}
+  \begin{enumerate}
+    \item \textbf{Concrete Vector Spaces:}
+    \begin{itemize}
+      \item Represented by specific examples
+      \pause  
+      \item Examples: $\mathbb{R}^n$, $\mathbb{C}^n$, functions, polynomials
+      \pause
+      \item Elements are $n$-tuples, functions, or polynomials with specific algebraic operations
+    \end{itemize}
+    \pause
+    \vspace{0.5cm}
+    \item \textbf{Abstract Vector Spaces:}
+    \begin{itemize}
+      \item Defined by a \textbf{set of axioms}
+      \pause
+      \item Examples: any set $V$ with operations $+$ and $\cdot$ satisfying vector space axioms
+      \pause
+      \item Elements can be any mathematical objects as long as they follow the axioms of a vector space
+    \end{itemize}
+  \end{enumerate}
+
+  \begin{block}{The main benefit of abstraction}
+    Any vector space with \textbf{finite basis} is essentially $\mathbb{R}^n$, so you could use it.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Abstract Vector Space}
+  An \textbf{abstract vector space} is a set $V$ along with two operations, addition $(+)$ and scalar multiplication $(\cdot)$, that satisfy the following axioms:
+  \begin{enumerate}
+    \item \textbf{Closure under addition:} $\forall u, v \in V,\ u + v \in V$
+    \item \textbf{Commutativity of addition:} $\forall u, v \in V,\ u + v = v + u$
+    \item \textbf{Associativity of addition:} $\forall u, v, w \in V,\ (u + v) + w = u + (v + w)$
+    \item \textbf{Existence of additive identity:} $\exists 0 \in V$ such that $\forall v \in V,\ v + 0 = v$
+    \item \textbf{Existence of additive inverse:} $\forall v \in V, \ \exists -v \in V$ such that $v + (-v) = 0$    
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \begin{enumerate}
+    \item[6.] \textbf{Closure under scalar multiplication:} $\forall c \in \mathbb{F},\ v \in V,\ c\cdot v \in V$
+    \item[7.] \textbf{Associativity of scalar multiplication:} $\forall c, d \in \mathbb{F},\ v \in V,\ (cd)\cdot v = c\cdot(d\cdot v)$
+    \item[8.] \textbf{Distributivity of scalar multiplication over addition:} $\forall c \in \mathbb{F},\ u, v \in V,\ c\cdot(u + v) = c\cdot u + c\cdot v$
+    \item[9.] \textbf{Distributivity of scalar addition over scalar multiplication:} $\forall c, d \in \mathbb{F},\ v \in V,\ (c + d)\cdot v = c\cdot v + d\cdot v$
+    \item[10.] \textbf{Identity for scalar multiplication:} $\forall v \in V,\ 1\cdot v = v$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Examples of ordinary vector spaces}
+  \begin{enumerate}
+    \item \textbf{Real coordinate space:} $\mathbb{R}^n = \{(x_1, x_2, \ldots, x_n)^T \mid x_i \in \mathbb{R}\}$
+    \item \textbf{Complex coordinate space:} $\mathbb{C}^n = \{(z_1, z_2, \ldots, z_n)^T \mid z_i \in \mathbb{C}\}$
+    \pause
+    \item \textbf{Polynomials:} $P_n(\mathbb{F}) = \{a_0 + a_1x + a_2x^2 + \ldots + a_nx^n \mid a_i \in \mathbb{F}\}$
+    \item \textbf{Functions:} $C(\mathbb{R}, \mathbb{F}) = \{f: \mathbb{R} \to \mathbb{F} \mid f \text{ is continuous}\}$
+    \pause
+    \item \textbf{Matrices:} $M_{mn}(\mathbb{F}) = \{A \mid A \text{ is an } m \times n \text{ matrix with entries from } \mathbb{F}\}$   
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{And one slide for Tropical Space}
+  A \textit{tropical space} is a set equipped with two binary operations, referred to as addition and multiplication. 
+  
+  Let's denote the tropical space as $(T, \oplus, \odot)$, where $T$ is the set, and $\oplus$ and $\odot$ are two binary operations satisfying the following axioms:
+  
+  \begin{enumerate}
+      \item[T1] $(T, \oplus)$ is a commutative monoid with identity element $\infty$
+      \item[T2] $\oplus$ is idempotent, meaning that for all $x \in T$, $x \oplus x = x$
+      \item[T3] $\odot$ distributes over $\oplus$, meaning that for all $x, y, z \in T$, $x \odot (y \oplus z) = (x \odot y) \oplus (x \odot z)$
+  \end{enumerate}
+  
+  \vspace{1cm}
+  In tropical mathematics, addition corresponds to taking a minimum and multiplication corresponds to usual addition:
+  
+  $a \oplus b = \min(a,b)$ and $a \odot b = a + b$
+  
+\end{frame}
+  
+
+\begin{frame}{Definition of Linear Independence}
+  A set of vectors $\{v_1, v_2, \ldots, v_n\}$ in a vector space $V$ is said to be \emph{linearly independent} if no vector in the set can be expressed as a linear combination of the others. In other words, the vectors are linearly independent if the only solution to the equation
+  
+  \[
+  \lambda_1v_1 + \lambda_2v_2 + \cdots + \lambda_nv_n = 0
+  \]
+  
+  is the trivial solution, where $\lambda_1 = \lambda_2 = \cdots = \lambda_n = 0$.
+
+  \pause\vspace{0.5cm}
+  \begin{block}{Remarks}
+    \begin{enumerate}
+      \item $\{v_1\} \text{ is linearly dependent } \Rightarrow v_1 = 0$
+      \item $\{v_1, v_2\} \text{ is linearly dependent } \Rightarrow v_1 = \lambda v_2$
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Tasks}
+  Let's consider the vector space of \textbf{Functions:} $$C(\mathbb{R}, \mathbb{R}) = \{f: \mathbb{R} \to \mathbb{R} \mid f \text{ is continuous}\}$$
+
+  \pause
+  \begin{block}{Task 1}
+    $\sin x,\ \cos x \in C(\mathbb{R}, \mathbb{R})$
+
+    Are they linearly dependent?
+  \end{block}
+
+  \pause
+  \begin{block}{Task 2}
+
+    $1, \sin x,\ \sin^2 x, \hdots,\ \sin^n x \in C(\mathbb{R}, \mathbb{R})$
+
+    Are they linearly dependent?
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Definition of Basis}
+  A \emph{basis} for a vector space $V$ is a set of vectors $\mathcal{B} = \{v_1, v_2, \ldots, v_n\}$ with the following properties:
+  
+  \begin{enumerate}
+      \item \textbf{Linear independence}: The vectors in $\mathcal{B}$ are linearly independent, i.e., no vector in the set can be expressed as a linear combination of the others
+      \item \textbf{Span}: The vectors in $\mathcal{B}$ span the vector space $V$, i.e., every vector in $V$ can be expressed as a unique linear combination of the vectors in $\mathcal{B}$
+  \end{enumerate}
+  
+  In other words, a basis is a linearly independent set of vectors that spans the entire vector space $V$
+\end{frame}
+
+
+\begin{frame}{Equivalent Properties of Basis}
+  A set of vectors $\mathcal{B} = \{v_1, v_2, \ldots, v_n\}$ in a 
+  vector space $V$ is a \emph{basis} if and only if at least one 
+  of the following equivalent properties holds:
+  
+  \begin{enumerate}
+      \item \textbf{Definition of Basis}: $\mathcal{B}$ is linearly independent and spans $V$
+      \item \textbf{Maximal Linearly Independent Set}: $\mathcal{B}$ is a linearly 
+      independent set and no other linearly independent set in $V$ contains 
+      more vectors than $\mathcal{B}$
+      \item \textbf{Minimal Spanning Set}: $\mathcal{B}$ spans $V$ and 
+      no other spanning set in $V$ contains fewer vectors than $\mathcal{B}$
+  \end{enumerate}
+  
+  \vspace{0.5cm}\pause
+  These properties are equivalent, meaning that if one of them holds for a set of vectors, then the other two properties also hold.
+\end{frame}
+
+
+\begin{frame}{The sacred meaning of the basis}
+  Lev $V$ be a vector space, and $\{v_1, v_2, \ldots, v_n\}$ is its basis, then
+
+  $$\forall v \in V\ \exists! \lambda_1, \ldots, \lambda_n : v = \lambda_1v_1 + \ldots + \lambda_nv_n$$
+
+  \pause
+  \begin{block}{Consequence}
+    {\small
+    \begin{itemize}
+      \item Function $f: \mathbb{R}^n \to V \text{ with basis } \mathcal{B} = \{v_1, v_2, \ldots, v_n\}$:
+      $$f((a_1, \ldots, a_n)) = a_1v_1 + \ldots + a_nv_n$$ is a \textbf{one-to-one and onto} mapping
+      between their elements
+      \item It is \textbf{bijective} linear transformation and it preserves 
+      the structure of vector addition and scalar multiplication
+      \pause
+      \item So \textbf{isomorphism} exists between $\mathbb{R}^n$ and $V$, 
+      we use the notation $\mathbb{R}^n \cong V$
+      \item Isomorphic vector spaces have the same algebraic properties, 
+      such as dimension and basis cardinality, 
+      and can be thought of as essentially the same space, 
+      just represented in different ways
+    \end{itemize}
+    }
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Vector Subspace}
+  A \textbf{vector subspace} (or \textbf{linear subspace}) $W$ of 
+  a vector space $V$ is a subset of $V$ that is closed 
+  under vector addition and scalar multiplication. 
+  
+  \pause
+  In other words, $W$ is a vector subspace of $V$ if it satisfies the following properties:
+
+  \begin{enumerate}
+      \item The zero vector $\vec{0}$ of $V$ is in $W$
+      \item If $\vec{u}$ and $\vec{v}$ are elements of $W$, then their sum $\vec{u} + \vec{v}$ is also in $W$
+      \item If $\vec{u}$ is an element of $W$ and $c$ is a scalar, then the scalar product $c\vec{u}$ is also in $W$
+  \end{enumerate}
+
+  If $W$ satisfies these properties, we can say that $W$ is a subspace 
+  of $V$ and write $W \subseteq V$.
+
+  \pause
+  \begin{example}
+    $\{y \in \mathbb{R}^n \mid Ay = 0\} \subseteq \mathbb{R}^n$
+  \end{example}
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Useful remark}
+    If $W \subseteq V$, then $\dim W \le \dim V$
+
+    \hspace{3.5cm} $= \Leftrightarrow W = V$
+  \end{block}
+
+  \pause
+  \begin{block}{Task 3}
+    Find basis of the space $W = \{y \in \mathbb{R}^n \mid Ay = 0\}$
+  \end{block}
+  \pause
+  \vspace{-20pt}
+  \begin{eqnarray*}
+    \begin{matrix} \boldsymbol{x}_1 &  & \boldsymbol{x}_3 &  & \end{matrix} \quad\ \\[-7pt]
+  \left[\begin{matrix}
+    1 & 1 & 0 & 2 & \multicolumn{1}{|c}{0} \\[-2pt]
+    \cline{1-2}
+    0 & 0 & \multicolumn{1}{|c}{1} & 5 & \multicolumn{1}{|c}{0} \\
+    \cline{3-4}
+  \end{matrix}\right] \\[-7pt]
+  \begin{matrix} & x_2 &  & x_4 &  \end{matrix} \quad
+  \end{eqnarray*} 
+  $\dim W = \text{ number of free variables}$
+  \begin{columns}
+    \begin{column}{0.4\paperwidth}
+      \pause
+      $$\begin{cases}
+        v_1 = (*\ 1\ *\ 0) \\
+        v_2 = (*\ 0\ *\ 1)
+      \end{cases}$$          
+    \end{column}
+    \begin{column}{0.4\paperwidth}
+      \pause
+      $$\begin{cases}
+        v_1 = (-1\ 1\ 0\ 0) \\
+        v_2 = (-2\ 0\ -5\ 1)
+      \end{cases}$$          
+    \end{column}
+  \end{columns}
+
+  \pause
+  {\small
+  \begin{enumerate}
+      \item So $\{v_1, v_2\}$ is linearly independent and 
+      \item for any solution $v = (a\ b\ c\ d): bv_1 + dv_2 = v$, 
+      because vector $v-bv_1 - dv_2$ is solution of our system
+  \end{enumerate}
+  We have built the \textbf{fundamental system of solutions}.}
+\end{frame}
+
+
+\begin{frame}{Linear Span}
+  Let $V$ be a vector space over a field $\mathbb{F}$, and 
+  let $S = \{\vec{v}_1, \vec{v}_2, \dots, \vec{v}_k\}$ be a subset of $V$. 
+  The \textbf{linear span} (or \textbf{linear shell}) of $S$, 
+  denoted by $\operatorname{span}(S)$, is the set of 
+  all linear combinations of the vectors in $S$. 
+
+  \[
+      \operatorname{span}(S) = \left\{\lambda_1\vec{v}_1 + \lambda_2\vec{v}_2 
+      + \cdots + \lambda_k\vec{v}_k \mid \lambda_i \in \mathbb{F},\  
+      1 \leq i \leq k\right\}
+  \]
+
+  \pause
+  Properties of the linear span:
+  \begin{itemize}
+      \item $\operatorname{span}(S)$ is a subspace of $V$
+      \item If $S \subseteq T \subseteq V$, then $\operatorname{span}(S) \subseteq \operatorname{span}(T)$
+      \item The smallest subspace containing $S$ is $\operatorname{span}(S)$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Example}
+  \begin{block}{Task 4}
+    Given five vectors in $\mathbb{R}^3$. 
+    Find basis from these vectors and expand the rest of the vectors over it.
+  \end{block}
+  \pause
+  \begin{enumerate}
+    \item A simple solution ``on the forehead'': 
+    we sort through all the subsets of vectors in search of 
+    a linearly independent one
+    \pause
+    \item After that, we express the remaining vectors in terms of 
+    the found ones, each time solving the system of linear equations 
+    with the right side equal to one of the remaining vectors
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Optimal solution}
+  $$\left[\begin{matrix}
+    1 & 1 & 5 & 1 & -1 \\
+    3 & 2 & 12 & 1 & 1 \\
+    2 & 1 & 7 & 1 & 0 
+  \end{matrix}\right] \to \dots \to
+  \left[\begin{matrix}
+    1 & 0 & 2 & 0 & 1 \\
+    \cline{1-1}
+    0 & \multicolumn{1}{|c}{1} & 3 & 0 & 0 \\
+    \cline{2-3}
+    0 & 0 & 0 & \multicolumn{1}{|c}{1} & -2 \\
+    \cline{4-5}
+    \end{matrix}\right]$$
+    \begin{itemize}
+      \item Numbers of principal variables are numbers of basis vectors
+      \pause
+      \item For our case they are $\color{blue!60}v_1, v_2, v_4$
+    \end{itemize}
+    \begin{align*}
+      \left[\begin{array}{>{\columncolor{blue!20}}c >{\columncolor{blue!20}}c c >{\columncolor{blue!20}}c c}
+        1 & 1 & 5 & 1 & -1 \\
+        3 & 2 & 12 & 1 & 1 \\
+        2 & 1 & 7 & 1 & 0 
+      \end{array}\right] \to \dots \to 
+      &\left[\begin{array}{c c >{\columncolor{gray!20}}c c >{\columncolor{gray!20}}c}
+        1 & 0 & 2 & 0 & 1 \\
+        \cline{1-1}
+        0 & \multicolumn{1}{|c}{1} & 3 & 0 & 0 \\
+        \cline{2-3}
+        0 & 0 & 0 & \multicolumn{1}{|c}{1} & -2 \\
+        \cline{4-5}
+        \end{array}\right] \\
+        &v_3 = 2v_1 + 3v_2 + 0v_4 \\
+        &v_5 = 1v_1 + 0v_2 - 2v_4
+    \end{align*}
+\end{frame}
+
+
+{ % all template changes are local to this group.
+    \setbeamertemplate{navigation symbols}{}
+    \begin{frame}<article:0>[plain]
+        \begin{tikzpicture}[remember picture,overlay]
+            \node[at=(current page.center)] {
+                \includegraphics[keepaspectratio,
+                                 width=\paperwidth,
+                                 height=\paperheight]{change_coordinates_meme.jpg}
+            };
+        \end{tikzpicture}
+     \end{frame}
+}
+
+
+\begin{frame}{Coordinates: 2D Example}
+    \begin{columns}
+      \begin{column}{0.4\paperwidth}
+        \begin{tikzpicture}
+          \coordinate (O) at (0,0);
+          \coordinate (A) at (1.5, 0);
+          \coordinate (C) at (  0, 1);
+          \coordinate (B) at ($(A) + (C)$);
+    
+          % Draw the axes 1
+          \draw[->] (-0.5, 0) -- (2, 0) node[right] {$\vec{e_1}$};
+          \draw[->] (0, -0.5) -- (0, 2) node[above] {$\vec{e_2}$};
+    
+          % Draw the axes 2
+          \draw[->, blue] (0, 0) -- (1.9, 0.5) node[right] {$\vec{f_1}$};
+          \draw[->, blue] (0, 0) -- (-0.5, 1.9) node[above] {$\vec{f_2}$};
+          
+          \draw[->, thick] (O) -- (B) node[midway, above] {$\vec{v}$};
+          \draw[dashed] (B) -- (C);
+          \draw[dashed] (B) -- (A);
+        \end{tikzpicture}  
+      \end{column}
+      \begin{column}{0.4\paperwidth}
+        \begin{align*}
+          \vec{v} = a\vec{e_1} + b\vec{e_2} \\
+          \vec{v} = c\vec{f_1} + d\vec{f_2}
+        \end{align*}
+          \end{column}
+    \end{columns}
+    
+    \begin{center}
+      How to link basis vectors?
+    \end{center}
+
+    \pause
+    \begin{columns}
+      \begin{column}{0.4\paperwidth}
+          \begin{align*}
+            \vec{f_1} = c_{11}\vec{e_1} + c_{21}\vec{e_2} = 
+            (\vec{e_1}, \vec{e_2}) 
+            \begin{pmatrix} c_{11} \\ c_{21} \end{pmatrix} \\
+            \vec{f_2} = c_{12}\vec{e_1} + c_{22}\vec{e_2} =
+            (\vec{e_1}, \vec{e_2}) 
+            \begin{pmatrix} c_{12} \\ c_{22} \end{pmatrix}
+          \end{align*}
+      \end{column}
+      \begin{column}{0.4\paperwidth}
+
+        $$\Rightarrow \quad (\vec{f_1}, \vec{f_2}) = (\vec{e_1}, \vec{e_2})
+        \begin{pmatrix} 
+          c_{11} & c_{12} \\ 
+          c_{21} & c_{22}
+        \end{pmatrix}$$
+      \end{column}
+    \end{columns}
+\end{frame}
+
+
+\begin{frame}{Change of coordinates in general case}
+  Let $V$ be vector spaces with bases 
+  $\{\vec{e_1}, \ldots, \vec{e_n}\}$ and 
+  $\{\vec{f_1}, \ldots, \vec{f_n}\}$. 
+
+  $$(\vec{f_1}, \ldots, \vec{f_n}) = (\vec{e_1}, \ldots, \vec{e_n})
+  \begin{pmatrix} 
+     &   & \\ 
+     & C & \\ 
+     &   & 
+  \end{pmatrix}$$
+
+  The matrix $C$ is called \textbf{the change of basis matrix} 
+  from the basis $\{\vec{e_1}, \ldots, \vec{e_n}\}$ 
+  to the basis $\{\vec{f_1}, \ldots, \vec{f_n}\}$. It is square and reversible.
+
+  \pause\vspace{1em}
+  Given a vector $\vec{v} \in V$, 
+  its coordinates with respect to the 
+  bases are related by:
+
+  $$[\vec{v}]_{\vec{f}} = C^{-1}[\vec{v}]_{\vec{e}}$$
+
+  where $[\vec{v}]_{\vec{f}}$ denotes the coordinates of $\vec{v}$ 
+  with respect to the basis $\{\vec{f_1}, \ldots, \vec{f_n}\}$, 
+  and $[\vec{v}]_{\vec{e}}$ denotes the coordinates of $\vec{v}$ with 
+  respect to the basis $\{\vec{e_1}, \ldots, \vec{e_n}\}$.
+\end{frame}
+
+
+\begin{frame}{Matrix Rank}
+  \begin{definition}
+    The \emph{rank} of a matrix $A \in M_{mn}(\mathbb{R})$ is denoted as $\operatorname{rank}(A)$
+  \end{definition}
+
+  \begin{enumerate}
+    \item It is the maximum number of linearly independent \textbf{columns}
+    \pause
+    \item It is the maximum number of linearly independent \textbf{rows}
+    \pause
+    \item \textbf{Factorial rank}: $\min \{k \mid A = B\cdot C\}$, where  
+    $A \in M_{mn},\  B \in M_{mk},\  C \in M_{kn}$
+    \pause
+    \item \textbf{Tensor rank}: $\min \{k \mid A = x_1y_1 + \ldots + x_ky_k\}$, 
+    where $A \in M_{mn},\  x_i \in M_{m1},\  y_i \in M_{1n}$
+    \pause
+    \item \textbf{Minor rank} is the largest \textbf{order} of a non-singular ($\det \neq 0$)
+    square submatrix in $A$
+    \item $\operatorname{rank}(A) = \text{ number of {\bf principal} variables }$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Examples}
+  \begin{align*}
+    &A \in M_{mn} \\
+    &\operatorname{rank}(A) = 0 \Leftrightarrow A = 0 \\
+    &\operatorname{rank}(A) = 1 \Leftrightarrow A = xy, \text{ where } x \in M_{m1},\  y \in M_{1n} \\
+  \end{align*}
+  \vspace{-1cm}
+  \begin{block}{Question}
+    How to find factorial rank? Skeleton decomposition!
+  \end{block}
+  \pause
+  \begin{align*}
+    \left[\begin{array}{>{\columncolor{blue!20}}c >{\columncolor{blue!20}}c c >{\columncolor{blue!20}}c c}
+      1 & 1 & 5 & 1 & -1 \\
+      3 & 2 & 12 & 1 & 1 \\
+      2 & 1 & 7 & 1 & 0 
+    \end{array}\right] &\to \dots \to 
+    \left[\begin{array}{c c >{\columncolor{gray!20}}c c >{\columncolor{gray!20}}c}
+      1 & 0 & 2 & 0 & 1 \\
+      \cline{1-1}
+      0 & \multicolumn{1}{|c}{1} & 3 & 0 & 0 \\
+      \cline{2-3}
+      0 & 0 & 0 & \multicolumn{1}{|c}{1} & -2 \\
+      \cline{4-5}
+      \end{array}\right] \\
+      & \Rightarrow A = 
+      \left[\begin{array}{>{\columncolor{blue!20}}c|>{\columncolor{blue!20}}c|>{\columncolor{blue!20}}c}
+        &     &    \\
+        v_1 & v_2 & v_4 \\
+            &     &    
+      \end{array}\right] \cdot C 
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Matrix Rank Properties}
+  \begin{itemize}
+    \item $\forall C \mid \det C \neq 0: \operatorname{rank}(A) = \operatorname{rank}(CA)$
+    \pause
+    \item \textbf{Rank of Sum:} $|\operatorname{rank}(A) - \operatorname{rank}(B)| \le \operatorname{rank}(A+B) \le \operatorname{rank}(A) + \operatorname{rank}(B)$
+  \end{itemize}
+
+  \vspace{1cm}
+  \begin{block}{Task 5}
+    Provide the examples of matrices 
+    $\operatorname{rank}(A) = 3,\ \operatorname{rank}(B) = 2$,
+    where we'll see all the possibilities.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+\begin{itemize}  
+  \item \textbf{Rank of Product:} $\operatorname{rank}(A) + \operatorname{rank}(B) - k \le \operatorname{rank}(AB) \le \min\{\operatorname{rank}(A), \operatorname{rank}(B)\}$
+  
+  where $k$ is common dimension
+  \pause    
+  \item \textbf{Rank-Nullity Theorem:} For an $m \times n$ matrix $A$, 
+  the rank of $A$ plus the nullity of $A$ is equal to the number of 
+  columns in $A$: $$\operatorname{rank}(A) + \operatorname{nullity}(A) = n$$
+  
+  {\small The nullity of a matrix $A$ is the dimension of its null space 
+  (also known as the kernel). The null space of a matrix $A$ is the set of 
+  all vectors $x$ that satisfy the equation $Ax = 0$.}
+  
+  \pause    
+  \item \textbf{Submatrix Property:} The rank of a matrix is always greater than or equal to the rank of any of its submatrices: $\operatorname{rank}(A) \geq \operatorname{rank}(B)$, where $B$ is a submatrix of $A$.
+\end{itemize}  
+
+\end{frame}
+
+
+\begin{frame}{Task 6}
+  $$\operatorname{rank}\begin{pmatrix}
+    A & 0 \\
+    0 & D
+  \end{pmatrix} = 
+  \operatorname{rank}A + \operatorname{rank}D$$
+
+  \vspace{1cm}
+  Find the $\operatorname{rank}\begin{pmatrix}
+    A & B \\
+    5A & 7B
+  \end{pmatrix}$.
+\end{frame}
+
+
+\begin{frame}{Task 7}
+  \begin{align*}
+    &A \in M_n(\mathbb{R}) \\
+    &(\widehat{A})_{ij} = (C_{ij}) \text{, where } C_{ij} \text{ is cofactor} \\
+    & \det \widehat{A} = \det A ^ {n-1} \\
+    & \operatorname{rank}(\widehat{A}) - ?
+  \end{align*}
+ 
+  \pause
+  $$\operatorname{rank}(\widehat{A}) = 
+  \begin{cases}
+    n,\ \operatorname{rank}(A) = n \\
+    1,\ \operatorname{rank}(A) = n-1 \\
+    0,\ \operatorname{rank}(A) < n-1
+  \end{cases}$$
+
+  \pause
+  \begin{block}{Hint for the hardest case}
+    $A \widehat{A} = \widehat{A} A = \det A \cdot E \Rightarrow A \widehat{A} = 0
+    \Rightarrow \text{ rows of } \widehat{A} \subseteq \{y \in \mathbb{R}^n \mid Ay = 0\}
+    \Rightarrow \dim = n - \operatorname{rank}(A) = 1$
+  \end{block}
+
+\end{frame}
+
+\end{document}

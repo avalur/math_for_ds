@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\begin{document}
+
+\section*{Homework 3 (10 points max)}
+
+\begin{enumerate}
+\item (1 point) Given vectors
+\[a_1 = \begin{pmatrix}1 \\2 \\3\end{pmatrix},\,a_2 = \begin{pmatrix}0 \\1 \\1\end{pmatrix},\,a_3 = \begin{pmatrix}3 \\8 \\11\end{pmatrix},\,a_4 = \begin{pmatrix}1 \\1 \\3\end{pmatrix},\,a_5 = \begin{pmatrix}1 \\3 \\3\end{pmatrix}\]
+Find a basis for their linear span and express all remaining vectors in terms of the basis vectors.
+
+\item (1 point) Find a basis for the vector space $U = \{y \in \mathbb{R}^5| Ay = 0\}$, where
+\[
+  A = \begin{pmatrix}
+    2 & 1 & 3 & 0 & 7 \\
+    1 & 2 & 0 & 1 & 4 \\
+    0 & 1 & -1 & 1 & 0 
+  \end{pmatrix}
+\]
+
+\item (1 point) Determine if it's possible to select a fundamental system of solutions (FSS) 
+for the system of linear equations from the vectors
+\[v_1 = \begin{pmatrix}-4 \\-5 \\2 \\3\end{pmatrix},\,v_2 = \begin{pmatrix}0 \\1 \\2 \\1\end{pmatrix},\,v_3 = \begin{pmatrix}5 \\5 \\3 \\-2\end{pmatrix},\,v_4 = \begin{pmatrix}4 \\5 \\-2 \\-3\end{pmatrix}\]
+
+\[\begin{cases}x_1 - x_3 + 2 x_4 = 0 \\x_2 - 2 x_3 + 3 x_4 = 0 \\2 x_1 - 2 x_2 + 2 x_3 - 2 x_4 = 0\end{cases}\]
+
+\item (2 points) Are the functions $\sin(x)$, $\cos(x)$, $\sin(2x)$, $\cos(2x)$, ..., $\sin(nx)$, $\cos(nx)$ linearly dependent?
+
+\item (2 points) Let $\mathbb{R}[x]_n$ be the set of all polynomials with real coefficients 
+of degree no greater than $n$. 
+Show that the systems $\{1, x, x^2, \dots, x^n\}$ and $\{1, x - a, (x - a)^2, \dots, (x - a)^n\}$, 
+where $a \in \mathbb{R}$, are bases in $R[x]_n$ and 
+find the transition matrices from the first basis to the second and from the second to the first.
+
+\item (1 point) Find the rank of the following matrix for different values of 
+the parameter $\lambda$:
+\[
+\begin{pmatrix}
+7 - \lambda & -12 & 6 \\
+10 & -19 - \lambda & 10 \\
+12 & -24 & 13 - \lambda
+\end{pmatrix}
+\]
+
+\item (2 points) Let $A$ and $B$ be square matrices of the same size. 
+Prove that
+\[\operatorname{rk}\begin{pmatrix}A & AB \\B & B + B^2\end{pmatrix} = 
+\operatorname{rk}(A) + \operatorname{rk}(B)\]
+\end{enumerate}
+
+\end{document}
