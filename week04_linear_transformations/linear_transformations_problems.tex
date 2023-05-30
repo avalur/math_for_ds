@@ -1,0 +1,116 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+
+\begin{document}
+
+\section*{Homework 4 (10 points max)}
+
+\noindent\textbf{General information:} \\
+Square matrices $A, B \in M_n(\mathbb{R})$ are called conjugate 
+if there exists a non-singular matrix $C \in M_n(\mathbb{R})$ 
+such that $B = C^{-1}AC$. \\
+
+\begin{enumerate}
+  \item (2 points) Determine which of the following matrices are conjugate. 
+  If they are conjugate, specify the matrix that relates them:
+
+  \[
+  \begin{pmatrix}
+  1 & 0 \\ 
+  0 & 0
+  \end{pmatrix}
+  \quad \text{and} \quad
+  \begin{pmatrix}
+  0 & 0 \\
+  0 & 1
+  \end{pmatrix}
+  , \quad
+  \begin{pmatrix}
+  3 & 1 \\
+  1 & 2
+  \end{pmatrix}
+  \quad \text{and} \quad
+  \begin{pmatrix}
+  3 & -1  \\
+  2 & 1
+  \end{pmatrix}
+  , \quad
+  \begin{pmatrix}
+  2 & 1 \\
+  1 & 1
+  \end{pmatrix}
+  \quad \text{and} \quad
+  \begin{pmatrix}
+  2 & 1  \\
+  0 & 1
+  \end{pmatrix}
+  .
+  \]
+  
+  \item (2 points) In the space $\mathbb{R}^3$, the following vectors are given:
+  
+  \[
+  v_1 = \begin{pmatrix} 1 \\ 0 \\ 2 \end{pmatrix}, \quad
+  v_2 = \begin{pmatrix} 1 \\ 1 \\ -1 \end{pmatrix}, \quad
+  v_3 = \begin{pmatrix} 2 \\ 0 \\ 3 \end{pmatrix}, \quad
+  w_1 = \begin{pmatrix} 1 \\ 0 \\ 1 \end{pmatrix}, \quad
+  w_2 = \begin{pmatrix} 0 \\ 1 \\ 1 \end{pmatrix}, \quad
+  w_3 = \begin{pmatrix} 0 \\ 0 \\ 2 \end{pmatrix}
+  \]
+  
+  Find the matrix $A$ of the linear operator $T: \mathbb{R}^3 \to \mathbb{R}^3$ 
+  according to the rule $x \mapsto Ax$, such that $Av_i = w_i$ for all $1 \leq i \leq 3$.
+  
+\item (1 point) Let $T: \mathbb{R}^3 \to \mathbb{R}^2$ be a linear mapping given 
+in the standard basis by the matrix 
+$A = \begin{pmatrix} 1 & 2 & 0 \\ -1 & 0 & 2 \end{pmatrix}$. Let
+
+
+\[
+f_1 = \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}, \quad
+f_2 = \begin{pmatrix} 1 \\ 1 \\ 2 \end{pmatrix}, \quad
+f_3 = \begin{pmatrix} 1 \\ 2 \\ 3 \end{pmatrix} \quad \text{vectors in } \mathbb{R}^3, \quad
+g_1 = \begin{pmatrix} 1 \\ 2 \end{pmatrix}, \quad
+g_2 = \begin{pmatrix} 1 \\ 1 \end{pmatrix} \quad \text{vectors in } \mathbb{R}^2
+\]
+
+Find the matrix of the mapping $T$ in the bases $f_1, f_2, f_3$ and $g_1, g_2$.
+
+\item (1 point) Find the eigenvalues and eigenvectors of the linear operators 
+given in some basis by the matrix:
+
+\[
+\begin{pmatrix}
+0 & 1 & 0 \\
+-4 & 4 & 0 \\
+-2 & 1 & 2
+\end{pmatrix}
+\]
+
+Can this matrix be diagonalized in any basis?
+
+\item (1 point) Find the eigenvalues for the matrix $x^Tx$, where $x$ is a row $(a_1, \dots, a_n)$.
+
+\item (1 point) Find the matrix of a linear operator $T: \mathbb{R}^3 \to \mathbb{R}^3$ such that 
+the following conditions are satisfied: 
+$\ker T = \langle \begin{pmatrix} 2 \\ 1 \\ -2 \end{pmatrix} \rangle$, 
+$\operatorname{Im} T = \langle \begin{pmatrix} 1 \\ 2 \\ -1 \end{pmatrix}, 
+\begin{pmatrix} 1 \\ 1 \\ -1 \end{pmatrix} \rangle$.
+
+\item (2 points) Let $\mathbb{R}[x]_n$ be the space of polynomials of degree 
+no higher than $n$. Consider a linear mapping on it according to the rule 
+$f \mapsto (x+1)f'(x)-2f(x)+ \frac{1}{x} \int\limits_0^x f(t) \, dt$. 
+Find the matrix of this linear mapping in the basis $1, x, x^2, \dots, x^n$.
+\end{enumerate}
+
+\end{document}

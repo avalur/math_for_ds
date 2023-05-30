@@ -1,0 +1,731 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+% \usepackage{animate}                                       % Для вставки видео в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+% \usepackage{tcolorbox}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{1 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 4. Linear transformations and operators}
+\author{Aleks Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{May 31, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+\begin{document}
+%\unitlength=2mm
+
+% выводим заглавие
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+\begin{frame}{Linear Transformations}
+A linear transformation $T$ is a function that maps vectors from one vector space $V$ to another vector space $W$ and satisfies the following properties:
+\begin{itemize}
+    \item Additivity: $T(\mathbf{u} + \mathbf{v}) = T(\mathbf{u}) + T(\mathbf{v})$ for all $\mathbf{u}, \mathbf{v} \in V$
+    \item Homogeneity: $T(c\mathbf{u}) = cT(\mathbf{u})$ for all $c \in \mathbb{R}$ and $\mathbf{u} \in V$
+\end{itemize}
+
+\pause
+\begin{block}{Remark}
+  If $T: V \rightarrow W$ is bijective then $T$ is an \emph{isomorphism}.
+\end{block}
+\end{frame}
+
+
+\begin{frame}
+  Linear transformations can be represented as matrices. 
+  If $T: V \rightarrow W$ is a linear transformation 
+  and $\mathbf{A}$ is a matrix representing $T$, 
+  then $T(\mathbf{x}) = \mathbf{A} \mathbf{x}$.
+
+  \begin{example}
+  A rotation in $\mathbb{R}^2$ by an angle $\theta$ counterclockwise is a linear transformation. The matrix representation is:
+  \[
+  \mathbf{A} = \begin{bmatrix}
+  \cos\theta & -\sin\theta \\
+  \sin\theta & \cos\theta \\
+  \end{bmatrix}
+  \]
+  \end{example}
+
+  \pause
+  \begin{block}{Lemma}
+    Let $e_1, \dots, e_n$ be basis of $V$ then 
+    $$ \forall w_1, \dots, w_n \in W \ \exists !\ T: T(e_i) = w_i$$
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Task 1}
+  Is there any linear transformation $T: \mathbb{R}^2 \rightarrow \mathbb{R}^2$ such that
+
+  $$T \underset{v_1}{\left(
+    \begin{matrix}
+      -1 \\ 1
+    \end{matrix}\right)}
+     = \begin{pmatrix}
+       1 \\ 0
+    \end{pmatrix},
+  T \underset{v_2}{\left(\begin{matrix}
+    2 \\ 1
+  \end{matrix}\right)} 
+     = \begin{pmatrix}
+    1 \\ 1
+  \end{pmatrix},
+  T\underset{v_3}{\left(\begin{matrix}
+    1 \\ 2
+  \end{matrix}\right)}
+   = \begin{pmatrix}
+    0 \\ 1
+  \end{pmatrix}$$
+  \pause
+
+  \begin{block}{Solution}
+    The first two vectors are linearly independent and also $v_3 = v_1 + v_2$
+
+    It means, that $T(v_3) = T(v_1)+T(v_2)$, but this is not the case.
+
+    \pause
+    Also you could find the matrix of $T$ directly from the equations:
+    $$ \begin{pmatrix}
+       a & b \\ 
+       c & d
+       \end{pmatrix} 
+       \begin{pmatrix}
+        -1 \\ 1
+       \end{pmatrix} =  
+       \begin{pmatrix}
+        1 \\ 0
+       \end{pmatrix} ,
+       \begin{pmatrix}
+        a & b \\ 
+        c & d
+        \end{pmatrix} 
+        \begin{pmatrix}
+         2 \\ 1
+        \end{pmatrix} =  
+        \begin{pmatrix}
+         1 \\ 1
+        \end{pmatrix}
+        $$
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Useful formalism}
+  Let $\vec{e}_1, \dots, \vec{e}_n$ be basis of $V$ 
+  and $\vec{f}_1, \dots, \vec{f}_m$ be basis of $W$.
+  
+  \begin{align*}
+    T(\vec{e}_i) = \vec{w}_i = a_{1i}\vec{f}_1 + \dots + a_{mi}\vec{f}_m \\
+    T(\vec{e}_i) = (\vec{f}_1, \dots, \vec{f}_m)
+    \begin{pmatrix}
+      a_{1i} \\ \vdots \\ a_{mi}
+    \end{pmatrix}
+  \end{align*}
+  
+  \pause
+  $$(T(\vec{e}_1), \dots, T(\vec{e}_n)) = (\vec{f}_1, \dots, \vec{f}_m)
+  \begin{pmatrix}
+    a_{11} & \dots & a_{1n} \\
+    \vdots & \ddots& \vdots \\ 
+    a_{m1} & \dots & a_{mn}
+  \end{pmatrix}$$
+
+  \pause
+  $$\boxed{T(\vec{e}_1, \dots, \vec{e}_n) = (\vec{f}_1, \dots, \vec{f}_m)A}$$
+\end{frame}
+
+
+\begin{frame}{Changing the Linear Operator Matrix with Changing Basis}
+  Let $T: V \rightarrow W$ be a linear transformation, and let $\mathbf{A}$ be the matrix representing $T$ with respect to bases $\mathcal{B}_V$ and $\mathcal{B}_W$ for vector spaces $V$ and $W$, respectively. 
+  
+  \pause
+  If we change the bases for $V$ and $W$ to $\mathcal{B}'_V$ and $\mathcal{B}'_W$, respectively, we can find the new matrix representation $\mathbf{A}'$ of $T$ with respect to these new bases using the following formula:
+  
+  \[
+  \mathbf{A}' = \mathbf{P}^{-1} \mathbf{A} \mathbf{Q}
+  \]
+  
+  where $\mathbf{P}$ is the change of basis matrix from $\mathcal{B}_W$ to $\mathcal{B}'_W$ and $\mathbf{Q}$ is the change of basis matrix from $\mathcal{B}_V$ to $\mathcal{B}'_V$
+  
+  \pause
+  \begin{block}{Note}
+  If $V=W$ and $\mathcal{B}_V = \mathcal{B}_W$, 
+  we have $\mathbf{P} = \mathbf{Q}$ and the formula 
+  simplifies to $\mathbf{A}' = \mathbf{P}^{-1} \mathbf{A} \mathbf{P}$
+  \end{block}
+  
+\end{frame}
+
+
+\begin{frame}{Remarks}
+  $V \rightarrow W$
+
+  On the coordinates level: 
+  $x=Qx' \text{ and } y=Py'$
+
+  \[
+  \mathbf{A}' = \mathbf{P}^{-1} \mathbf{A} \mathbf{Q}
+  \]
+  
+  \pause
+  \begin{block}{Remark 1}
+    $x' \rightarrow x=\mathbf{Q}x' \rightarrow y = \mathbf{A}x = 
+    \mathbf{A}\mathbf{Q}x' \rightarrow y' = \mathbf{P}^{-1}y=
+    \mathbf{P}^{-1} \mathbf{A} \mathbf{Q}x' = \mathbf{A}'x'$
+  \end{block}
+
+  \pause
+  \newcommand{\sidelen}{2.5cm}
+  \newcommand{\shift}{0.25cm}
+  \begin{block}{Remark 2}
+    In fact, by changing the bases, one can bring the matrix of any 
+    linear transformation to a <<block-identity>> one:
+
+    \centering
+    \begin{tikzpicture}
+      \draw (0, 0) -- node [left] {$A' =$} ++(0, \sidelen) 
+      -- ++(\sidelen, 0)
+      -- ++(0, -\sidelen) -- ++(-\sidelen, 0);
+      \draw (0, \sidelen/2) -- ++(\sidelen, 0);
+      \draw (\sidelen/2, 0) -- ++(0, \sidelen);
+      \coordinate [label={$E$}] () at (\sidelen/4, 3*\sidelen/4-\shift);
+      \coordinate [label={$k$}] () at (\sidelen/4, 4*\sidelen/4);
+      \coordinate [label={$k$}] () at (-\shift, 3*\sidelen/4-\shift);
+      
+      \coordinate [label={$0$}] () at (3*\sidelen/4, 3*\sidelen/4-\shift);
+      \coordinate [label={$0$}] () at (\sidelen/4, \sidelen/4-\shift);
+      
+      \coordinate [label={$0$}] () at (3*\sidelen/4, \sidelen/4-\shift);
+  
+      (6*\sidelen/4+3*\shift, \sidelen/2-1.5*\shift);
+    \end{tikzpicture}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Kernel and Image}
+  Let $T: V \rightarrow W$ be a linear transformation. The \emph{kernel} and \emph{image} of $T$ are defined as follows:
+  
+  \begin{block}{Kernel}
+  The \alert{kernel} (or null space) of $T$ is the set of all 
+  vectors $\mathbf{v} \in V$ such that $T(\mathbf{v}) = \vec{0}_W$, 
+  where $\vec{0}_W$ is the zero vector in $W$:
+  
+  \[
+  \operatorname{ker}(T) = \left\{ \mathbf{v} \in V : T(\mathbf{v}) = 
+  \vec{0}_W \right\}
+  \]
+  \end{block}
+  
+  \begin{block}{Image}
+  The \alert{image} (or range) of $T$ is the set of all vectors in $W$ 
+  that can be obtained by applying $T$ to some vector in $V$:
+  
+  \[
+  \operatorname{im}(T) = \left\{ T(\mathbf{v}) : \mathbf{v} \in V \right\}
+  \]
+  \end{block}  
+\end{frame}
+  
+
+\begin{frame}
+  \begin{block}{Dimension Theorem (rank-nullity)}
+    The dimension theorem (or rank-nullity theorem) states that for a linear transformation $T: V \rightarrow W$:
+    
+    \[
+    \operatorname{dim}(\operatorname{ker}(T)) + \operatorname{dim}(\operatorname{im}(T)) = \operatorname{dim}(V)
+    \]
+  \end{block}
+
+  \begin{block}{Remarks}
+    For $T: \mathbb{R}^n \rightarrow \mathbb{R}^m$ its matrix can be represented as set of columns:
+    \begin{align*}
+      A &= [A_1\mid \dots \mid A_n] \\
+      \operatorname{ker}(T) &= \{x \in \mathbb{R}^n \mid Ax = 0 \} \\
+      \operatorname{im}(T) &= \{x_1A_1 + \dots + x_nA_n \mid x_i \in \mathbb{R}\} = \operatorname{span}\left<A_1, \dots, A_n \right>
+    \end{align*}
+    \begin{enumerate}
+      \item $T$ is onto $\Leftrightarrow \operatorname{im}(T) = W$
+      \item $T$ is one-to-one $\Leftrightarrow \operatorname{ker}(T) = 0$
+    \end{enumerate}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Theorem}
+  (in some sense the inverse of the dimension theorem)
+  
+  Let $K \subseteq V, I \subseteq W$ and $$ \operatorname{dim}(K) + \operatorname{dim}(I) = \operatorname{dim}(V)$$
+  Than exists linear transformation $T: V \rightarrow W$ such that
+  $$ \operatorname{ker}(T) = K, \quad \operatorname{im}(T) = I$$
+  
+  \begin{block}{Proof scheme for $\mathbb{R}$ case}
+    \small
+    \pause
+    Suppose $V = \mathbb{R}^n$ and $W = \mathbb{R}^m$.
+    We will find matrix $A$ with linearly independent rows, 
+    that $K = \{x \in \mathbb{R}^n \mid Ax = 0\}$ and vectors 
+    $w_1, \dots, w_k \in \mathbb{R}^m$ that $I = \left<w_1, \dots, w_k \right>$
+
+    \pause
+    Consider matrix $B = [w_1\mid \dots \mid w_k]$. 
+    $$ \#(\text{of rows in } A) = \operatorname{rk}(A) = n - \operatorname{dim}(W) = k$$
+    
+    Than shapes of matrices $A, B$ allow us to consider the 
+    product $BA \in M_{nm}(\mathbb{R})$, which is the matrix representing $T$
+    (for $BCA \in M_{nm}(\mathbb{R}), \forall C \in M_{k}(\mathbb{R}), \det C \neq 0$ it is also true).
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Linear Operators}
+  Routhly speaking up to now we used only Guass algorithm for various problems.
+  
+  \pause
+  A \emph{linear operator} is a linear transformation from 
+  a vector space $V$ to itself, i.e., $T: V \rightarrow V$
+  
+  \begin{block}{Matrix Representation}
+  Let $\mathcal{B} = \{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\}$ be a basis of $V$. The matrix representation of a linear operator $T: V \rightarrow V$ with respect to $\mathcal{B}$ is an $n \times n$ matrix $A = [a_{ij}]$, where:
+  
+  \[
+  T(\mathbf{v}_j) = \sum_{i=1}^{n} a_{ij} \mathbf{v}_i
+  \]
+  \end{block}
+
+  So for basis vectors $\mathbf{v}_1, \dots, \mathbf{v}_n \in V$
+  $$\boxed{T(\mathbf{v}_1, \dots, \mathbf{v}_n) = (\mathbf{v}_1, \dots, \mathbf{v}_n)A}$$  
+\end{frame}
+
+
+\begin{frame}
+  Thus if we change the bases for $V$ to $\mathcal{B}'_V$,  
+  we can find the new matrix representation $\mathbf{A}'$ 
+  of operator $T$ with respect to these new bases using the following formula:
+  
+  \[
+  \mathbf{A}' = \mathbf{P}^{-1} \mathbf{A} \mathbf{P}
+  \]
+
+  \pause
+  Operator's invariants:
+  \begin{enumerate}
+    \pause
+    \item $\mathrm{tr} (\mathbf{A}') = 
+    \mathrm{tr} (\mathbf{P}^{-1} \mathbf{A} \mathbf{P}) = 
+    \mathrm{tr} (\mathbf{A} \mathbf{P} \mathbf{P}^{-1}) =
+    \mathrm{tr} (\mathbf{A}) = \mathrm{tr} (T)$
+    \pause
+    \item $\det (\mathbf{A}') = 
+    \det (\mathbf{P}^{-1} \mathbf{A} \mathbf{P}) = 
+    \det (\mathbf{P}^{-1}) \det (\mathbf{A}) \det(\mathbf{P}) = 
+    \det (\mathbf{A}) = \det ({T})$
+    \pause
+    \item Characteristic Polynomial: 
+    $\det(\lambda E - \mathbf{A}') = \det(\lambda E - \mathbf{A}) = \det(\lambda id - T)$
+    \pause
+    \item Minimal vanishing polynomial
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Eigenvalues and Eigenvectors}
+   \begin{block}{The main question}
+    How to choose a basis in which the matrix of a linear operator 
+    will have the simplest form?
+   \end{block}
+
+   \pause
+   We can't find such basis without Eigenvalues and Eigenvectors.
+   \pause
+   \begin{block}{Definition}
+    An \alert{eigenvalue} $\lambda$ of a linear operator $T: V \rightarrow V$ is a scalar such that there exists a non-zero vector $\mathbf{v} \in V$, called an \alert{eigenvector} of $T$, satisfying:
+    \[
+    T\mathbf{v} = \lambda \mathbf{v}
+    \]
+   \end{block}
+   \begin{itemize}
+    \pause
+    \item $V_\lambda = \{ v \in V \mid T \mathbf{v} = \lambda \mathbf{v} \} = \operatorname{ker}(T - \lambda Id)$
+    \pause
+    \item $\lambda$ — eigenvalue $\Leftrightarrow \exists x \neq 0: Ax = \lambda x$ 
+    $\Leftrightarrow \exists x \neq 0: (A - \lambda E) x = 0$
+    $\Leftrightarrow (A - \lambda E)$ is singular (irreversible)
+    $\Leftrightarrow \det (A - \lambda E) = 0$
+   \end{itemize}
+   \pause
+   Eigenvalues of $A = \mathrm{Spec}A = \text{ roots of } \chi_A$
+   
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Matrix Representation of Complex Numbers}
+    A rotation in $\mathbb{R}^2$ by an angle $\theta$ counterclockwise is a linear transformation. The matrix representation is:
+    \[
+    \mathbf{A} = \begin{bmatrix}
+    \cos\theta & -\sin\theta \\
+    \sin\theta & \cos\theta \\
+    \end{bmatrix}
+    \]
+
+  \begin{itemize}
+    \pause\item Also we know, that a complex number $z = r(\cos\theta + i\sin\theta)$ corresponds to a rotation by $\theta$ and dilation by $r$
+    \pause\item So we can represent $z$ by the matrix 
+    \[
+    \mathbf{Z} = \begin{bmatrix}
+    r\cos\theta & -r\sin\theta \\
+    r\sin\theta & r\cos\theta \\
+    \end{bmatrix}
+    \]
+    \pause\item Having the alternative construction of 
+    complex numbers, which allow us to get square root from negatives numbers
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Quaternions}
+
+  Quaternions extend the concept of rotation from 2D to 3D and 
+  are used in 3D geometry, physics, and computer graphics
+
+  \begin{itemize}
+    \pause\item Quaternions, discovered by William Rowan Hamilton, are a number system that extends the complex numbers
+    \pause\item They can be expressed in the form $q = a + bi + cj + dk$ where $a, b, c, d$ are real numbers, and $i, j, k$ are the fundamental quaternion units with the relations: $i^2 = j^2 = k^2 = ijk = -1$
+    \pause\item In 3D space, $b, c,$ and $d$ can be interpreted as coefficients for the $i, j,$ and $k$ directions, respectively, while $a$ is the real part
+  \end{itemize}
+  
+  \pause
+  \begin{example}
+    Quaternion multiplication is non-commutative. 
+    For instance, if $q_1 = a_1 + b_1i + c_1j + d_1k$ and $q_2 = a_2 + b_2i + c_2j + d_2k$, then
+    \begin{align*}
+      q_1 q_2 &\neq q_2 q_1
+    \end{align*}
+  \end{example}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Matrix Representation of Quaternions}
+
+  \pause
+  A quaternion $q = a + bi + cj + dk$ can be represented 
+  as the following $4\times 4$ real matrix:
+  \[
+  \begin{bmatrix}
+    a & -b & -c & -d \\
+    b & a & -d & c \\
+    c & d & a & -b \\
+    d & -c & b & a \\
+  \end{bmatrix}
+  \]
+
+  \pause
+  Similarly, it can be represented as a 2x2 complex matrix:
+  \[
+  \begin{bmatrix}
+    a + bi & c + di \\
+    -c + di & a - bi \\
+  \end{bmatrix}
+  \]
+
+  \pause
+  These representations allow us to apply linear algebra techniques to quaternions. 
+  
+  \pause
+  For example, quaternion multiplication corresponds to matrix multiplication in these representations.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Introduction to Octonions}
+
+  Octonions, also known as Cayley numbers, are a non-associative extension of Quaternions. They form an 8-dimensional normed division algebra over the real numbers.
+
+  \pause
+  \[
+  \text{Let } O = a_0 + a_1e_1 + a_2e_2 + \cdots + a_7e_7
+  \]
+
+  Where:
+  \begin{itemize}
+    \item $a_0, a_1, ..., a_7 \in \mathbb{R}$
+    \item $e_1, e_2, ..., e_7$ are the octonion units
+  \end{itemize}
+
+  \pause
+  Multiplication of Octonions is not associative, i.e., $(ab)c \neq a(bc)$ for some Octonions $a, b, c$, 
+  so they can't have a matrix representation
+
+  \pause
+  Octonions find applications in different areas of theoretical physics, like string theory and quantum mechanics
+
+  \pause
+  \begin{block}{Problem}
+    Why we have something interesting in the 2, 4 and 8 dimensional spaces?  
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{ChatGPT is answering..}
+  \footnotesize
+  The dimensions 2, 4, and 8 are special due to the properties 
+  of the normed division algebras that exist in these dimensions. 
+  These are the real numbers (dimension 1), complex numbers (dimension 2), 
+  quaternions (dimension 4), and octonions (dimension 8).
+
+\pause There are several reasons these dimensions are special:
+\begin{enumerate}
+  \pause\item \textbf{Frobenius Theorem}: According to the Frobenius theorem, 
+  these are the only dimensions in which normed division algebras 
+  over the reals can exist. In other words, there are no other 
+  dimensions where we can define a multiplication operation 
+  that behaves like the one we're used to from real and complex numbers.
+  \pause\item \textbf{Algebraic Structure}: As we increase the dimension, 
+  the algebraic structure gets progressively <<weaker>>. 
+  Real numbers form a field, as do complex numbers. 
+  Quaternions, however, are non-commutative, meaning that the order 
+  in which you multiply them matters. 
+  Octonions go a step further and are non-associative, 
+  meaning that even the property $(ab)c = a(bc)$ doesn't hold.
+\end{enumerate}
+
+So, while you might initially expect every dimension to have 
+its own <<numbers>>, algebraic properties restrict the possibilities, 
+leaving 1, 2, 4, and 8 as the special dimensions.  
+\end{frame}
+
+
+\begin{frame}
+  \small
+  \begin{itemize}
+    \item Dimension 16 corresponds to the <<Sedenions>>, which are an extension 
+    of the Octonions. However, the Sedenions are not a division algebra 
+    because they contain zero divisors, i.e., non-zero elements 
+    whose product is zero.
+    
+    \pause\item
+    Just like how the Quaternions lose commutativity and the 
+    Octonions lose associativity, the Sedenions lose the property 
+    of being an <<alternative algebra>>, which means they no longer 
+    satisfy the property $(xx)y = x(xy)$ for all $x$, $y$ in the algebra. 
+    This leads to the existence of zero divisors, making them much less 
+    useful for many mathematical and physical applications compared to the lower-dimensional algebras.
+    
+    \pause\item
+    The pattern of losing properties as we double dimensions stops here; 
+    there are no interesting algebras in dimension 32. 
+    Sedenions are generally seen as the end of the line for 
+    the Cayley-Dickson construction, the process by which each algebra 
+    is formed by doubling the dimension of the previous one.
+    
+    \pause\item
+    So while there are <<numbers>> in dimension 16, 
+    they lose many of the nice properties we have in lower dimensions. 
+    This is why we often focus more on dimensions 1, 2, 4, and 8.
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Diagonalizable Operators}
+  A linear operator $T: V \rightarrow V$ is called \emph{diagonalizable} if there exists an invertible matrix $P$ and a diagonal matrix $D$ such that:
+  
+  \[
+  P^{-1} A P = D
+  \]
+  
+  where $A$ is the matrix representation of $T$ with respect to some basis of $V$.
+  
+  \pause
+  For a diagonalizable operator $T$, the diagonal entries of the matrix $D$ 
+  are the eigenvalues of $T$, and the columns of the matrix $P$ 
+  are the corresponding eigenvectors.
+
+  \pause
+  \begin{block}{Conditions for Diagonalizability}
+    A linear operator $T$ is diagonalizable iff the following conditions hold:
+    
+    \begin{itemize}
+      \item The sum of the dimensions of the eigenspaces is equal to $n$
+      \item There exist $n$ linearly independent eigenvectors of $T$
+    \end{itemize}
+  \end{block}
+
+\end{frame}
+    
+\begin{frame}{Diagonalization Algorithm}
+  To diagonalize a linear operator $T$ with matrix representation $A$, follow these steps:
+  
+  \begin{enumerate}
+    \item Find the eigenvalues $\lambda_1, \lambda_2, \dots, \lambda_r$ of $A$
+    \item Find a basis for each eigenspace $E_{\lambda_i}$
+    \item Form the matrix $P$ with \emph{the eigenvectors as columns}
+    \item Compute $P^{-1} A P$, which should be the diagonal matrix $D$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Task 2}
+  Let $E \in {M}_n (\mathbb{R})$ — identity matrix and $X \in {M}_n (\mathbb{R})$. Solve equation 
+
+  $$X^2 = E$$
+  \pause
+
+  \begin{block}{Solution}
+    $\chi_A (t) = t^2 - 1 = (t-1)(t+1)$
+
+    It means, that $X$ is diagonalizable (there is no multiple roots) 
+    and $$X = PDP^{-1}$$
+
+    and $D$ has only $\pm 1$ on the diagonal.
+  \end{block}
+
+  \pause
+  \begin{block}{Remark}
+    For recurrent formula
+    $ x_n = Ax_{n-1} = \dots = A^{n-1}x_1 $
+  
+    If $A=PDP^{-1}$, then $A^n=PD^nP^{-1}$.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Projectors}
+  Let $V$ be vector space and $U, W \subseteq V$:
+  \begin{enumerate}
+    \item $U \cap W = 0$
+    \item $\left< U, W \right> = V \Leftrightarrow \forall v \in V\ v = u + w$
+  \end{enumerate}
+
+  \vspace{1cm}
+  \pause
+  Projection $P: V \to V$ ``on $U$ along $W$'':
+  $$v= u+w \mapsto u$$
+
+\end{frame}
+
+
+\begin{frame}{Projector Matrix: Geometric Approach}
+  \begin{itemize}
+    \item A projector matrix $P$ is a square matrix that satisfies the property: $P^2 = P$
+    \item Geometrically, a projector matrix represents a linear transformation 
+    that projects vectors onto a subspace $U$ of the original vector space, 
+    $U = \operatorname{Im}P,\ W=\operatorname{ker}P$
+    \item For a given subspace $U$, the projector matrix $P$ maps each vector $v$ 
+    in the vector space to its orthogonal projection $Pv$ on $U$
+    \pause
+    \item $Pv$ is the closest point to $v$ in the subspace $U$
+    \pause
+    \item If $U$ is spanned by an orthonormal basis $\{u_1, u_2, \dots, u_k\}$, 
+    then the projector matrix is given by:
+      \[P = u_1u_1^T + u_2u_2^T + \cdots + u_ku_k^T\]
+  \end{itemize}
+
+\end{frame}
+
+  
+\begin{frame}{Projector Matrix: Algebraic Approach}
+  \begin{itemize}
+    \item Algebraically, a projector matrix can be derived using the Gram-Schmidt orthogonalization process or by solving a system of linear equations
+    \item Suppose we have a basis $\{u_1, u_2, \dots, u_k\}$ for subspace $U$. 
+    We can form a matrix $B$ whose columns are the basis vectors, i.e., $B = [u_1 \; u_2 \; \cdots \; u_k]$
+    \item If $B$ has linearly independent columns, the projector matrix onto 
+    the column space of $B$ (which is $U$) can be computed as:
+      \[P = B(B^TB)^{-1}B^T\]
+    \item If the basis vectors are already orthogonal, the projector matrix simplifies to:
+      \[P = B(B^TB)^{-1}B^T = BB^T\]
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Question}
+    What is the diagonal form of projector $P = C^{-1}D C$?
+  \end{block}  
+
+  \pause
+  \begin{example}
+    $ U, W \subset \mathbb{R}^n$, $U \cap W = 0$, $\dim U + \dim W = n$
+
+    How to express the projector on $U$?
+  \end{example}
+
+  Suppose we have a basis $\{u_1, u_2, \dots, u_k\}$ for subspace $U$. 
+  We can form a matrix $B$ whose columns are the basis vectors, i.e., $B = [u_1 \; u_2 \; \cdots \; u_k]$
+
+  And let $W = \{y \in \mathbb{R}^n \mid Ay=0\}$, then $$P_U = B(AB)^{-1}A$$
+
+\begin{block}{Remark}
+  In computation use this formula carefully:
+  $P v= B\left((AB)^{-1}(Av)\right)$
+\end{block}  
+\end{frame}
+
+
+\begin{frame}{Jordan Normal Form}
+  \begin{itemize}
+    \item The Jordan normal form is a canonical representation of a linear operator or matrix
+    \item It's a decomposition of a matrix into a block diagonal matrix with Jordan blocks
+    \item A Jordan block is a square matrix with the following structure:
+      \[J_k(\lambda) = \begin{bmatrix}
+        \lambda & 1      &        &        \\
+                & \lambda & \ddots &        \\
+                &        & \ddots & 1      \\
+                &        &        & \lambda
+      \end{bmatrix}\]
+      \item Not all matrices have a Jordan normal form over the real numbers, 
+      but they do have one over the complex numbers
+      \item For a given matrix $A$, there exists an invertible matrix $P$ such that:
+      \[A = PJP^{-1}\]
+      where $J$ is the Jordan normal form of $A$ 
+  \end{itemize}
+\end{frame}
+
+
+\end{document}
