@@ -604,9 +604,20 @@ leaving 1, 2, 4, and 8 as the special dimensions.
   
   \begin{enumerate}
     \item Find the eigenvalues $\lambda_1, \lambda_2, \dots, \lambda_r$ of $A$
-    \item Find a basis for each eigenspace $E_{\lambda_i}$
+    \item Find a basis for each eigenspace $V_{\lambda_i}$
     \item Form the matrix $P$ with \emph{the eigenvectors as columns}
     \item Compute $P^{-1} A P$, which should be the diagonal matrix $D$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Condition, sufficient for diagonalization}
+  Let $T: \mathbb{R}^n \to \mathbb{R}^n,\ x \mapsto Ax$.
+  
+  \begin{enumerate}
+    \item Suppose $p(T) = 0 (\Leftrightarrow  p(A) = 0)$ for some polynomial $p$
+    \item If $p(x) = (x-\lambda_1)\dots (x-\lambda_k)$ than $T$ is diagonalizable
+    \item Common case is to use $\chi_A$ as $p$
   \end{enumerate}
 \end{frame}
 
@@ -618,12 +629,13 @@ leaving 1, 2, 4, and 8 as the special dimensions.
   \pause
 
   \begin{block}{Solution}
-    $\chi_A (t) = t^2 - 1 = (t-1)(t+1)$
+    Than $p(t) = t^2 - 1 = (t-1)(t+1)$ is vanishing polynomial for $X$
 
     It means, that $X$ is diagonalizable (there is no multiple roots) 
     and $$X = PDP^{-1}$$
 
-    and $D$ has only $\pm 1$ on the diagonal.
+    and $D$ has only $\pm 1$ on the diagonal. Vice versa, 
+    for any $X = PDP^{-1}$ with such matrix $D$ we have $X^2 = E$.
   \end{block}
 
   \pause
