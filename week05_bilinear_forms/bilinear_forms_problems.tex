@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+
+\begin{document}
+
+\section*{Homework 5 (11 points max)}
+
+\noindent\textbf{General information:} \\
+\begin{itemize}
+  \item Recall that the standard inner product on $R^n$ is  $\langle x, y\rangle = x^Ty$
+  \item $\mathbb{R}[x]_{\leq n}$ denotes the space of polynomials of degree 
+  at most $n$, i.e., $\mathbb{R}[x]_{\leq n} = \{a_0 + a_1x + \dots + a_nx^n \mid a_i \in \mathbb{R}\}$
+  \item A matrix $A \in M_n(\mathbb{R})$ is called orthogonal if $A^TA = E$
+\end{itemize}
+
+\begin{enumerate}
+  \item (2 points) Describe all orthogonal matrices of size 
+  $n \times n$ consisting of integers.
+  
+  \item (2 points) In the space $\mathbb{R}^4$, a bilinear form 
+  $$\beta(x, y) = 2x_2y_1 + x_4y_4$$ is given. 
+  A quadratic form $Q: \mathbb{R}^4 \to \mathbb{R}$ was constructed 
+  based on it. After that, $Q$ was restricted to the subspace 
+  $V = \{x \in \mathbb{R}^4 \mid x_1 - 3x_2 - 3x_3 + x_4 = 0\}$. 
+  Find the signature of $Q$ and the signature of the restriction of $Q$ to $V$.
+
+  \item (1 point) Consider the Euclidean space $\mathbb{R}[x]_{\leq 3}$ with 
+  the inner product $\langle f, g\rangle = \int\limits^1_{-1} f(x)g(x) dx$.
+  Using the Gram-Schmidt method, orthogonalize the basis $1, x, x^2, x^3$.
+  
+  \item (1 point) Find the lengths of the sides and the internal angles of the 
+  triangle $ABC$ in the space $\mathbb{R}^5$ with the standard inner product, 
+  where $A = (2, 4, 2, 4, 2)^T, B = (6, 4, 4, 4, 6)^T$, and $C = (5, 7, 5, 7, 2)^T$.
+  
+  \item (2 points) Let $U \subseteq \mathbb{R}^4$ be a vector subspace given as follows: 
+  $U = \operatorname{Span}\langle v_1, v_2, v_3, v_4\rangle$, where $v_1 = (1, 1, 4, 3)^T, v_2 = (1, 5, 5, 8)^T, v_3 = (-2, 6, -2, 24)^T$, 
+  and $v_4 = (2, -4, 3, -19)^T$. Define this 
+  subspace as $U = \{y \in \mathbb{R}^4 \mid Ay = 0\}$ for some 
+  matrix $A \in M_{m4}(\mathbb{R})$. 
+  (Think about why this problem is given in the topic about inner products).
+  
+  \item (1 point) In the space $\mathbb{R}^3$, the standard inner 
+  product $(x, y) = x^Ty$ is given, and three vectors are given: 
+  $p_1 = (1, 4, 0)^T, p_2 = (-1, 4, 4)^T$, and $p_3 = (6, 8, 0)^T$. 
+  Let $L$ be the hyperplane passing through points $p_1, p_2, p_3$. 
+  Determine the distance from the hyperplane $L$ to the following 
+  vectors: $w_1 = (1, 3, 5)^T$ and $w_2 = (3, 8, 3)^T$. 
+  Are they on the same side of the hyperplane $L$?
+  
+  \item (2 points) Does there exist an inner product in the space 
+  of $n \times n$ matrices $(n > 1)$ with respect to which 
+  the matrix of all ones would be orthogonal to any upper triangular matrix?
+\end{enumerate}
+\end{document}

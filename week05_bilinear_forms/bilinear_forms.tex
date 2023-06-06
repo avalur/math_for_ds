@@ -1,0 +1,713 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{1 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 5. Bilinear forms and inner product}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{June 7, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+\begin{document}
+%\unitlength=2mm
+
+% выводим заглавие
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+\begin{frame}{Bilinear Forms}
+  \begin{itemize}
+    \item A bilinear form is a function that takes two vectors and 
+    returns a scalar, satisfying linearity properties
+    \pause
+    \item Formally, a bilinear form is a function $\beta: V \times V \rightarrow F$, 
+    where $V$ is a vector space over a field $F$, such that:
+      \begin{itemize}
+        \item $\beta(u_1 + u_2, v) = \beta(u_1, v) + \beta(u_2, v)$ for all $u_1, u_2, v \in V$
+        \item $\beta(u, v_1 + v_2) = \beta(u, v_1) + \beta(u, v_2)$ for all $u, v_1, v_2 \in V$
+        \item $\beta(\alpha u, v) = \alpha \beta(u, v)$ for all $u, v \in V$ and $\alpha \in F$
+        \item $\beta(u, \alpha v) = \alpha \beta(u, v)$ for all $u, v \in V$ and $\alpha \in F$
+      \end{itemize}
+      We can look it as some vector product: $\beta(u, v) = u \cdot_\beta v$
+    
+    \pause\item Bilinear forms can be represented by a matrix 
+    $B \in F^{n \times n}$, 
+    with $\beta(u, v) = u^TBv$ for column vectors $u, v \in V$, 
+    and $(B)_{ij} = \beta(e_i, e_j)$
+    \pause\item Bilinear forms can be used to define geometrical structures, 
+    such as inner products, norms, and distances
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Symmetric and Skew-Symmetric Bilinear Forms}
+  \begin{itemize}
+    \item Symmetric Bilinear Forms:
+      \begin{itemize}
+        \item A bilinear form $\beta: V \times V \rightarrow F$ is symmetric 
+        if $\beta(u, v) = \beta(v, u)$ for all $u, v \in V$
+        \item Its matrix representation $B$ is symmetric, i.e., $B = B^T$
+        \item Examples: inner products, quadratic forms
+      \end{itemize}
+    \pause\item Skew-Symmetric Bilinear Forms:
+      \begin{itemize}
+        \item A bilinear form $\beta: V \times V \rightarrow F$ is 
+        skew-symmetric if $\beta(u, v) = -\beta(v, u)$ for all $u, v \in V$
+        \item Matrix representation $B$ is skew-symmetric, i.e., $B = -B^T$
+        \item Examples: cross products, exterior products
+      \end{itemize}
+    \pause\item Properties:
+      \begin{itemize}
+        \item Every bilinear form can be uniquely decomposed into a symmetric 
+        and a skew-symmetric part
+        \item For a skew-symmetric bilinear form, $\beta(u, u) = 0$ 
+        for all $u \in V$
+        \item Symmetric bilinear forms are important in geometry, as they can 
+        define inner products, norms, and distances
+        \item Skew-symmetric bilinear forms play a key role in the study of 
+        vector fields and differential forms
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Cross Product and Exterior Product}
+
+  \pause
+  \begin{block}{Cross Product}
+  \small
+  In three dimensions, the \textbf{cross product} of two vectors $\mathbf{a}$ 
+  and $\mathbf{b}$ is a vector that is perpendicular 
+  to both and therefore normal to the plane containing them.
+  \[
+  \mathbf{a} \times \mathbf{b} = \left( a_2b_3 - a_3b_2, a_3b_1 - a_1b_3, a_1b_2 - a_2b_1 \right)
+  \]
+  \end{block}
+  
+  \pause
+  \begin{block}{Exterior Product}
+  \small
+  The \textbf{exterior product} (or wedge product) is a geometric product 
+  that combines vectors to form a new vector in a space of higher dimension. 
+  For instance, combining two vectors in space produces a 
+  bivector (an oriented patch of plane). 
+  It extends the cross product and has key applications 
+  in differential forms, and in defining the determinant and the Pfaffian.
+  
+  \[
+  \mathbf{a} \wedge \mathbf{b} = (a_1b_2 - a_2b_1) \mathbf{e_1} \wedge \mathbf{e_2}
+  \]
+  \end{block}
+\end{frame}
+  
+
+\begin{frame}{Changing the bilinear form with changing basis}  
+  If we change the bases for $V$ to $\mathcal{B}'$, 
+  we can find the new matrix representation $\mathbf{B}'$ of the bilinear form 
+  with respect to these new bases using the following formula:
+  
+  \[
+  \mathbf{B}' = \mathbf{C}^{T} \mathbf{B} \mathbf{C}
+  \]
+  
+  where $\mathbf{C}$ is the change of basis matrix from $\mathcal{B}$ to 
+  $\mathcal{B}'$
+  
+  \pause
+  \begin{block}{Note}
+    Let's recall the inverse of the matrix when changing the linear operator. 
+    So you can determine what matrix do you have through changing basis :)
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Invariants of Bilinear Forms with Changing Basis}
+  \begin{itemize}
+    \item New matrix representation: $B' = C^T B C,\ C$ is non-singular
+    \item Invariants:
+      \begin{itemize}
+        \pause \item Rank: $\operatorname{rank}(B') = \operatorname{rank}(B)$
+        \pause \item $\operatorname{sign}(\det B)$
+        \pause \item Symmetry: $B=B^T$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Left and Right Orthogonal Complements}
+  \begin{itemize}
+    \pause \item Bilinear form $\beta: V \times W \rightarrow F$ 
+    between vector spaces $V$ and $W$
+    \pause \item Right orthogonal complement:
+      \begin{itemize}
+        \item Definition: $V^\perp = \{w \in W \mid \beta(v, w) = 0 \ \forall v \in V\}$
+        \item $V^\perp$ is a subspace of $W$
+      \end{itemize}
+      \pause \item Left orthogonal complement:
+      \begin{itemize}
+        \item Definition: $^\perp W = \{v \in V \mid \beta(v, w) = 0 \ \forall w \in W\}$
+        \item $^\perp W$ is a subspace of $V$
+      \end{itemize}
+  \end{itemize}
+
+  \pause
+  \begin{block}{Remarks}
+    \begin{itemize}
+      \item there are orthogonal complements for subsets
+      \item if $\beta: V \times V \rightarrow F$ is symmetric, then 
+      \begin{align*}
+        V^\perp &= \operatorname{ker}^R \beta =  \{y \mid By = 0 \} \\
+        ^\perp V &= \operatorname{ker}^L \beta =  \{y \mid y^tB = 0 \}
+      \end{align*}
+      $\operatorname{rk} \beta + \dim \operatorname{ker}^R \beta = n$
+    \end{itemize}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Duality Theorem in general}
+  \begin{itemize}
+    \item Context: vector spaces $V$ and $W$ over a field $F$ with 
+    a bilinear form $\beta: V \times W \rightarrow F$
+    \pause\item Let $U \subseteq V$ and $S \subseteq W$ be subspaces
+    \pause\item Definitions:
+      \begin{itemize}
+        \item $^\perp S = \{v \in V \mid \beta(v, w) = 0 \ \forall w \in S\}$ 
+        (left orthogonal complement of $S$)
+        \item $U^\perp = \{w \in W \mid \beta(v, w) = 0 \ \forall v \in U\}$ 
+        (right orthogonal complement of $U$)
+      \end{itemize}
+      \pause\item Duality Theorem:
+      \begin{itemize}
+        \item If $\beta$ is nondegenerate, then $^\perp(U^\perp) = U$ and $^\perp(S^\perp) = S$
+        \item Nondegenerate: $\beta(v, w) = 0 \ \forall v \in V$ implies $w = 0$, 
+        and $\beta(v, w) = 0 \ \forall w \in W$ implies $v = 0$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Duality Theorem for one vector space}
+  If $\beta: V \times V \rightarrow F,\ n = \dim V, U \subseteq V$, then:
+  \begin{enumerate}
+    \item $^\perp(U^\perp) = U$ 
+    \item $\dim U + \dim U^\perp = n$
+    \item $U \subseteq W \Rightarrow W^\perp \subseteq U^\perp$
+    \item $(U+W)^\perp = U^\perp \cap W^\perp$
+    \item $(U \cap W)^\perp = U^\perp+W^\perp$
+  \end{enumerate}
+
+  \pause
+  \begin{example}
+    For the illustration of dualism consider 
+    $\beta: \mathbb{R}^n \times \mathbb{R}^n \rightarrow \mathbb{R},$ 
+    $\beta(x, y) = x^ty,$ $v_i \in \mathbb{R}$
+    
+    $$ \left<v_1, \dots, v_k \right>^\perp = \left\{ y \in \mathbb{R}^n \mid 
+    \begin{bmatrix}
+      v_1^t \\ \vdots \\ v_k^t
+    \end{bmatrix} y = 0\right\} $$
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{The Main Fact about Symmetric Bilinear Forms}
+  \begin{itemize}
+    \item Definition: $\beta$ is symmetric if $\beta(v, w) = \beta(w, v) \ \forall v, w \in V$
+    \item The Main Fact:
+      \begin{itemize}
+        \item There exists a basis $\mathcal{B} = \{v_1, \dots, v_n\}$ of $V$ 
+        such that the matrix representation of $\beta$ with respect to $\mathcal{B}$ 
+        is a diagonal matrix $D$ with entries $1, -1$, and $0$
+        \item In other words, $D_{ij} = \left\{
+          \begin{array}{cl}
+            1 & \text{if } i = j \text{ and } \beta(v_i, v_i) > 0 \\
+            -1 & \text{if } i = j \text{ and } \beta(v_i, v_i) < 0 \\
+            0 & \text{if } i = j \text{ and } \beta(v_i, v_i) = 0 \\
+            0 & \text{if } i \neq j
+          \end{array}\right.$
+        \pause
+        \item Signature of $\beta$ (for symmetric forms) is $(\#1, \#-1, \#0)$ 
+        \item $\#(1)+\#(-1)$ is $\operatorname{rk}\beta$, $\#(0)$ is $\dim \operatorname{ker} \beta$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Algorithm for Finding the Signature of a Bilinear Form}
+  \begin{enumerate}
+    \item Given a symmetric bilinear form $\beta: V \times V \rightarrow F$ 
+    on a finite-dimensional vector space $V$ over a field $F$
+    \item Find a basis for $V$ such that the matrix representation of $\beta$ 
+    with respect to this basis is diagonal
+    \item Let $D$ be the diagonal matrix obtained in step 2, 
+    with diagonal entries $D_{11}, D_{22}, \ldots, D_{nn}$
+    \item Compute the number of positive, negative, and zero diagonal entries: \\
+      \begin{center}
+        $p = \#\{i \mid D_{ii} > 0\}$ \\
+        $n = \#\{i \mid D_{ii} < 0\}$ \\
+        $z = \#\{i \mid D_{ii} = 0\}$          
+      \end{center}
+    \item The signature of the bilinear form is the triple $(p, n, z)$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Examples of Bilinear Forms on $\mathbb{R}^2$ and Their Signatures}
+  \pause
+  \begin{example}
+  Let $\beta_1(x, y) = x_1y_1 + x_2y_2$ with $x, y \in \mathbb{R}^2$ \\
+  Matrix representation: $B_1 = \begin{pmatrix} 1 & 0 \\ 0 & 1 \end{pmatrix}$ \\
+  Signature: $(2, 0, 0)$
+  \end{example}
+  
+  \pause
+  \begin{example}
+  Let $\beta_2(x, y) = x_1y_1 + 2x_1y_2 + 2x_2y_1 + 3x_2y_2$ \\
+  Matrix representation: $B_2 = \begin{pmatrix} 1 & 2 \\ 2 & 3 \end{pmatrix}
+  \to \begin{pmatrix} 1 & 2 \\ 0 & -1 \end{pmatrix}
+  \to \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ \\
+  Signature: $(1, 1, 0)$
+  \end{example}
+  
+  \pause
+  \begin{example}
+  Let $\beta_3(x, y) = x_1y_2 + x_2y_1$ \\
+  Matrix representation: $B_3 = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+  \to \begin{pmatrix} 1 & 1 \\ 1 & 0 \end{pmatrix}
+  \to \begin{pmatrix} 1 & 1 \\ 0 & -1 \end{pmatrix}
+  \to \begin{pmatrix} 1 & 0 \\ 0 & -1 \end{pmatrix}$ \\
+  Signature: $(1, 1, 0)$
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{Geometric Intuition of Bilinear Form Signatures}
+  Let $\beta: V \times V \to \mathbb{R}$ is symmetric, $\dim V = n$
+
+  \begin{itemize}
+    \item Signature: $(n, 0, 0) \Leftrightarrow \forall v \neq 0\ \beta(v, v) > 0$ — positive definite
+    \item Signature: $(0, n, 0) \Leftrightarrow \forall v \neq 0\ \beta(v, v) < 0$ — negative definite
+  \end{itemize}
+
+  \pause
+  \begin{block}{Geometric interpretation}
+  Let $W \subseteq V$, $\beta\mid_W : W \times W \to \mathbb{R}$ \\
+  Then $\#1 = \max \{\dim W \mid W \subseteq V,\ \beta\mid_W \text{ is positive} \}$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Jacobi Method for Signature of Bilinear Forms}
+  Let $\beta: \mathbb{R}^n \times \mathbb{R}^n \to \mathbb{R}$ is symmetric
+
+  $$
+  \begin{matrix}
+     & \multicolumn{1}{|c}{} & \multicolumn{1}{|c}{} &  & \multicolumn{1}{|c}{} \\
+    \cline{1-1}
+     &  & \multicolumn{1}{|c}{} &  & \multicolumn{1}{|c}{} \\
+    \cline{1-2}
+     &  & \ddots &  & \multicolumn{1}{|c}{} \\
+     \cline{1-4}
+  \end{matrix}\quad
+  \begin{matrix}
+      B_1 \mapsto \det B_1 = \Delta_1 \\
+      B_2 \mapsto \det B_2 = \Delta_2 \\
+      \vdots \\
+      B_n \mapsto \det B_n = \Delta_n \\
+  \end{matrix}
+  $$
+
+  \pause
+  Consider the sequence $\left\{\Delta_1, \frac{\Delta_2}{\Delta_1}, \dots, \frac{\Delta_n}{\Delta_{n-1}} \right\}$
+
+  $$\# \text{ positives } = \#1 \text{ of } \beta $$ $$\# \text{ negatives } = \#-1 \text{ of } \beta $$
+
+  \pause
+  \begin{block}{Sylvester's criterion}
+    $\beta$ is positive $\Leftrightarrow \Delta_1 > 0, \dots, \Delta_n > 0$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Wonderful Remark}
+    Let $\beta: \mathbb{R}^n \times \mathbb{R}^n \to \mathbb{R}$ is symmetric, i.e. $B^T = B$
+
+    Consider $$\det (B - \lambda E) = 0$$
+    
+    Then its roots are real and $\left\{\operatorname{sgn}(\lambda_i)\right\} = $ Signature of $\beta$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{LU Decomposition}
+  \begin{itemize}
+    \item LU decomposition is a method of decomposing a square matrix $A$ 
+    into a product of a lower triangular matrix $L$ and 
+    an upper triangular matrix $U$. 
+    In other words,
+    \[
+    A = LU
+    \]
+    where $L$ is a lower triangular matrix with diagonal elements equal to 1, 
+    and $U$ is an upper triangular matrix
+  
+    \pause\item It exists only when all the left upper corner minors 
+    are non-singular
+    
+    \pause\item The LU decomposition is widely used in the numerical solution of 
+    linear systems and the computation of matrix inverses
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Steps for LU decomposition}
+  \begin{enumerate}
+    \item Start with a square matrix $A$ of size $n \times n$
+    \item For each column $j$, from $1$ to $n$:
+    \begin{enumerate}
+      \item For each row $i$, from $j$ to $n$:
+      \begin{itemize}
+        \item Compute the element $u_{ij}$ of the upper triangular matrix:
+        \[
+        u_{ij} = a_{ij} - \sum_{k=1}^{j-1} l_{ik} u_{kj}
+        \]
+      \end{itemize}
+      \item For each row $i$, from $j+1$ to $n$:
+      \begin{itemize}
+        \item Compute the element $l_{ij}$ of the lower triangular matrix:
+        \[
+        l_{ij} = \frac{1}{u_{jj}} \left( a_{ij} - \sum_{k=1}^{j-1} l_{ik} u_{kj} \right)
+        \]
+      \end{itemize}
+    \end{enumerate}
+  \end{enumerate}  
+\end{frame}
+
+
+\begin{frame}{Introduction to Quadratic Forms}
+  \begin{itemize}
+  \item A quadratic form is a homogeneous polynomial of degree 2 in $n$ variables. 
+  In terms of a symmetric matrix $Q_\beta$, a quadratic form can be represented as:
+  
+  \[
+  f(\mathbf{v}) = \mathbf{v}^T Q \mathbf{v} = \beta(\mathbf{v}, \mathbf{v})
+  \]
+
+  \pause
+  \item Unlike the bilinear form, different matrices can correspond 
+  to the same quadratic form:
+  $$\begin{bmatrix}
+    0 & 2 \\ 0 & 0
+  \end{bmatrix},\ 
+  \begin{bmatrix}
+    0 & 1 \\ 1 & 0
+  \end{bmatrix},\ 
+  \begin{bmatrix}
+    0 & 0 \\ 2 & 0
+  \end{bmatrix} \to Q(\mathbf{v}) = 2v_1v_2$$
+  
+  \pause
+  \item But where is only one symmetric form: $Q(\mathbf{v}) = \mathbf{v}^T \frac{B+B^T}{2} \mathbf{v}$
+  \item and $\beta(v, u) = \frac{1}{2}(Q(v+u) - Q(v) - Q(u))$
+
+  \pause
+  \item Occurs in the second term of the expansion 
+  of a function of many variables in a Taylor series, and 
+  in the density of the normal distribution of the multivariate
+\end{itemize}
+\end{frame}
+
+\begin{frame}{Quadratic forms types and graphs}
+  The definiteness depends on the eigenvalues of $Q$, which determine 
+  the shape of the graph of quadratic forms. Let's look at the three cases:
+  
+  \begin{enumerate}
+    \pause\item Positive-definite quadratic form: if all the eigenvalues of $Q$ 
+    are positive, then the quadratic form is \emph{positive-definite}. 
+    In this case, the graph is a convex shape
+  
+    \pause\item Negative-definite quadratic form: if all the eigenvalues 
+    are negative, then the quadratic form is \emph{negative-definite}. 
+    In this case, the graph is a concave shape
+    
+    \pause\item Indefinite quadratic form: if $Q$ has both 
+    positive and negative eigenvalues, 
+    then the quadratic form is indefinite. 
+    In this case, the graph does not have a consistent curvature
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  $$Q(x) = x_1^2 + x_2^2$$
+  \begin{tikzpicture}
+    \begin{axis}[
+        xlabel={$x_1$},
+        ylabel={$x_2$},
+        zlabel={$Q(x)$},
+        zlabel style={rotate=-90},
+        view={115}{30},
+        colormap/hot,
+        mesh/cols=50,
+        mesh/rows=50,
+    ]
+    \addplot3[
+        surf,
+        domain=-2:2,
+        domain y=-2:2,
+    ] {x^2 + y^2};
+    \end{axis}
+    \end{tikzpicture}  
+\end{frame}
+
+
+\begin{frame}
+  $$Q(x) = x_1^2 - x_2^2$$
+  \begin{tikzpicture}
+    \begin{axis}[
+        xlabel={$x_1$},
+        ylabel={$x_2$},
+        zlabel={$Q(x)$},
+        zlabel style={rotate=-90},
+        view={115}{30},
+        colormap/hot,
+        mesh/cols=50,
+        mesh/rows=50,
+    ]
+    \addplot3[
+        surf,
+        domain=-2:2,
+        domain y=-2:2,
+    ] {x^2 - y^2};
+    \end{axis}
+    \end{tikzpicture}  
+\end{frame}
+
+
+\begin{frame}{Inner Product}
+  \begin{definition}
+  An \textit{inner product} on a vector space $V$ over a field $\mathbb{F}$ (either $\mathbb{R}$ or $\mathbb{C}$) is a function $\langle \cdot, \cdot \rangle: V \times V \to \mathbb{F}$ that satisfies the following properties for all $\mathbf{u}, \mathbf{v}, \mathbf{w} \in V$ and $c \in \mathbb{F}$:
+  \begin{enumerate}
+      \item $\langle \mathbf{u} + \mathbf{v}, \mathbf{w} \rangle = \langle \mathbf{u}, \mathbf{w} \rangle + \langle \mathbf{v}, \mathbf{w} \rangle$ (additivity)
+      \item $\langle c\mathbf{u}, \mathbf{v} \rangle = c\langle \mathbf{u}, \mathbf{v} \rangle$ (homogeneity)
+      \item $\langle \mathbf{u}, \mathbf{v} \rangle = \overline{\langle \mathbf{v}, \mathbf{u} \rangle}$ (conjugate symmetry)
+      \item $\langle \mathbf{u}, \mathbf{u} \rangle \ge 0$, and $\langle \mathbf{u}, \mathbf{u} \rangle = 0$ if and only if $\mathbf{u} = \mathbf{0}$ (positive definiteness)
+  \end{enumerate}
+  \end{definition}
+  
+  \pause
+  \begin{example}[Euclidean Inner Product]
+  The \textit{Euclidean inner product} (also called the \textit{dot product}) on $\mathbb{R}^n$ is defined as follows:
+  \[
+  \langle \mathbf{u}, \mathbf{v} \rangle = \mathbf{u} \cdot \mathbf{v} = u_1 v_1 + u_2 v_2 + \cdots + u_n v_n
+  \]
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{Remarks}
+  \begin{block}{}
+    Any bilinear form $\beta$, which is symmetric and positive-definite, defines inner product:
+    $$ \langle \mathbf{u}, \mathbf{v} \rangle = \beta(u, v)$$
+
+    Moreover its matrix $B = C^TC$ for some non-singular matrix $C$.
+  \end{block}
+  
+  \pause\vspace{1cm}
+  Vector space with some inner product is called Euclidean space.
+  \begin{itemize}
+    \item $|v| = \sqrt{\langle \mathbf{v}, \mathbf{v} \rangle}$ — 
+    length of vector
+    \item $-1 \le \cos \alpha = \frac{\langle \mathbf{v}, \mathbf{u} \rangle}{|v||u|} \le 1$ — 
+    angle between vectors 
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Orthogonal and Orthonormal Sets}
+  
+  \pause
+  \begin{definition}[Orthogonal Set]
+  A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\}$ in an inner product space $V$ is called an \textit{orthogonal set} if $\langle \mathbf{v}_i, \mathbf{v}_j \rangle = 0$ for all $i \neq j$.
+  \end{definition}
+  
+  \pause
+  \begin{definition}[Orthonormal Set]
+  A set of vectors $\{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\}$ in 
+  an inner product space $V$ is called an \textit{orthonormal set} if 
+  it is an orthogonal set and $|\mathbf{v}_i| = 1$ for all $i$.
+  \end{definition}
+    
+  \pause
+  \begin{example}[Orthonormal Set in $\mathbb{R}^2$]
+  The set $\left\{ \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ 1 \end{pmatrix}, \frac{1}{\sqrt{2}} \begin{pmatrix} 1 \\ -1 \end{pmatrix} \right\}$ is an orthonormal set in $\mathbb{R}^2$ because it is orthogonal and the norm of each vector is 1.
+  \end{example}  
+\end{frame}
+
+
+\begin{frame}{Equivalence of Euclidean spaces}
+  \begin{block}{Question}
+    When two Euclidean spaces are the same?
+  \end{block}
+
+  \begin{enumerate}
+    \item There is isomorphism $\phi: V \to U$
+    \item $\langle \mathbf{v_1}, \mathbf{v_2} \rangle = \langle \phi(\mathbf{v_1}), \phi(\mathbf{v_2}) \rangle$
+  \end{enumerate}
+
+  \begin{block}{Statement}
+    Two Euclidean spaces are the same iff $\dim V = \dim U$.
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Exotic Examples}
+  \begin{enumerate}
+    \item $M_{mn}(\mathbb{R}),\ 
+    \langle A, B \rangle = \operatorname{tr}(A^TB),\ 
+    \langle A, A \rangle = \sum\limits_{ij} a_{ij}^2 > 0$
+    \item $C[0, 1] = \left\{f[0, 1] \to \mathbb{R} \mid f \text{ is continuos} \right\}$
+    
+    $\langle f, g \rangle = \int\limits_0^1 f(x)g(x)dx$ 
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}{Gram-Schmidt Orthogonalization}
+  
+  The Gram-Schmidt orthogonalization process is a method for constructing 
+  an orthogonal (or orthonormal) basis for a subspace 
+  of an inner product space from a given linearly independent set of vectors.
+  
+  \begin{enumerate}
+  \item Start with a linearly independent 
+  set of vectors $\{\mathbf{v}_1, \mathbf{v}_2, \dots, \mathbf{v}_n\}$
+  \item Set $\mathbf{u}_1 = \mathbf{v}_1$
+  \item For $k = 2, 3, \dots, n$, calculate
+  \[
+  \mathbf{u}_k = \mathbf{v}_k - \sum_{j=1}^{k-1} \frac{\langle \mathbf{v}_k, \mathbf{u}_j \rangle}{\langle \mathbf{u}_j, \mathbf{u}_j \rangle} \mathbf{u}_j
+  \]
+  \item The set $\{\mathbf{u}_1, \mathbf{u}_2, \dots, \mathbf{u}_n\}$ is an orthogonal set. Optionally, normalize each vector to obtain an orthonormal set
+  \end{enumerate} 
+\end{frame}
+
+
+\begin{frame}{QR Decomposition}
+  
+  QR decomposition is the process of factoring a given matrix $\mathbf{A}$ into the product of an orthogonal matrix $\mathbf{Q}$ and an upper triangular matrix $\mathbf{R}$, i.e., $\mathbf{A} = \mathbf{Q}\mathbf{R}$.
+  
+  \begin{itemize}
+  \item \textbf{Orthogonal matrix:} A square matrix $\mathbf{Q}$ is orthogonal 
+  if its columns (and rows) form an orthonormal basis, i.e., 
+  $\mathbf{Q}^T\mathbf{Q} = \mathbf{Q}\mathbf{Q}^T = \mathbf{E}$
+  \item \textbf{Upper triangular matrix:} A matrix $\mathbf{R}$ is upper triangular 
+  if all its entries below the main diagonal are zero.
+  \end{itemize}
+  
+  \begin{block}{Gram-Schmidt and QR Decomposition}
+  Applying the Gram-Schmidt orthogonalization process 
+  to the columns of $\mathbf{A}$, after normalizations of $u_i \mapsto \frac{u_i}{|u_i|}$
+  we obtain the orthogonal matrix $\mathbf{Q}$. 
+  Then, the upper triangular matrix $\mathbf{R}$ can be calculated 
+  as $\mathbf{R} = \mathbf{Q}^T\mathbf{A}$
+  \end{block} 
+\end{frame}
+
+
+\begin{frame}
+  \begin{example}
+  Let $\mathbf{A} = \begin{pmatrix} 1 & 1 \\ 1 & -1 \end{pmatrix}$. 
+  The Gram-Schmidt process gives us 
+  $\mathbf{Q} = \begin{pmatrix} \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \\ 
+    \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \end{pmatrix}$, 
+  and $\mathbf{R} = \begin{pmatrix} \sqrt{2} & 0 \\ 0 & \sqrt{2} \end{pmatrix}$.
+  Thus, $\mathbf{A} = \mathbf{Q}\mathbf{R}$.
+  \end{example}
+
+  \begin{block}{Remark}
+    Let $e_1, \dots, e_n$ is orthogonal set in $V$. Then $\forall v \in V$
+    $$v = 
+    \frac{\langle v, e_1\rangle}{\langle e_1, e_1\rangle} e_1 + \dots + 
+    \frac{\langle v, e_n\rangle}{\langle e_n, e_n\rangle} e_n$$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  Let $\langle x, y \rangle = x^ty$ for $x,y \in \mathbb{R}^n$
+
+  $$v^\perp = \{y \in \mathbb{R}^n \mid v^ty = 0\}$$
+
+  \begin{center}
+    \begin{tikzpicture}[scale=0.8, axis/.style={->,blue,thick}, 
+      vector/.style={-stealth,red,very thick}, 
+      vector guide/.style={-stealth,dashed,red,thick}]
+      % Draw axes
+      \draw[axis] (0,0,0) -- (4,0,0) node[anchor=north east]{$x$};
+      \draw[axis] (0,0,0) -- (0,2.5,0) node[anchor=north west]{$y$};
+      \draw[axis] (0,0,0) -- (0,0,4) node[anchor=north]{$z$};
+
+      % Draw plane
+      \fill[blue!20, opacity=0.5] (0,0,0) -- (6,0,2) -- (0,3,2) -- cycle;
+
+      % Draw vectors
+      \draw[vector] (0,0,0) -- (-0.5,-1,1.5) node[anchor=north]{$v$};
+      \draw[vector guide] (0,0,0) -- (3,0,1);
+      \draw[vector guide] (0,0,0) -- (0,1.5,1);
+    \end{tikzpicture}
+  \end{center}
+
+  Oriented distance from any vector $w$ to the plane is:
+  $$
+  d = |v| \frac{\langle w, v \rangle}{\langle v, v \rangle} = 
+  \frac{\langle w, v \rangle}{|v|} = \left< w, \frac{v}{|v|} \right>
+  $$
+  And its sign is simple linear binary classificator in $\mathbb{R}^n$.
+\end{frame}
+
+\end{document}
