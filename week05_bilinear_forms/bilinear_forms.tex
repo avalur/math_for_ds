@@ -383,7 +383,7 @@ shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
 \end{frame}
 
 
-\begin{frame}{LU Decomposition}
+\begin{frame}{Lower-Upper Decomposition (LU)}
   \begin{itemize}
     \item LU decomposition is a method of decomposing a square matrix $A$ 
     into a product of a lower triangular matrix $L$ and 
@@ -397,6 +397,8 @@ shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
   
     \pause\item It exists only when all the left upper corner minors 
     are non-singular
+
+    \pause\item It can be viewed as the matrix form of Gaussian elimination
     
     \pause\item The LU decomposition is widely used in the numerical solution of 
     linear systems and the computation of matrix inverses
@@ -407,20 +409,21 @@ shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
 \begin{frame}{Steps for LU decomposition}
   \begin{enumerate}
     \item Start with a square matrix $A$ of size $n \times n$
-    \item For each column $j$, from $1$ to $n$:
+    
+    \item For each row $i$, from $1$ to $n$:
     \begin{enumerate}
-      \item For each row $i$, from $j$ to $n$:
+      \item For each column $j$, from $i$ to $n$:
       \begin{itemize}
         \item Compute the element $u_{ij}$ of the upper triangular matrix:
         \[
-        u_{ij} = a_{ij} - \sum_{k=1}^{j-1} l_{ik} u_{kj}
+        u_{ij} = a_{ij} - \sum_{k=1}^{i-1} l_{ik} u_{kj}
         \]
       \end{itemize}
-      \item For each row $i$, from $j+1$ to $n$:
+      \item For each column $j$, from $i+1$ to $n$:
       \begin{itemize}
-        \item Compute the element $l_{ij}$ of the lower triangular matrix:
+        \item Compute the element $l_{ji}$ of the lower triangular matrix:
         \[
-        l_{ij} = \frac{1}{u_{jj}} \left( a_{ij} - \sum_{k=1}^{j-1} l_{ik} u_{kj} \right)
+        l_{ji} = \frac{1}{u_{ii}} \left( a_{ji} - \sum_{k=1}^{i-1} l_{jk} u_{ki} \right)
         \]
       \end{itemize}
     \end{enumerate}
