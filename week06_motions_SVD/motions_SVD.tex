@@ -1,0 +1,657 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{0.5 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 6. Operators in Euclidean space and singular value decomposition (SVD)}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{June 14, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+% \setbeamercolor{background canvas}{bg=gray}
+% \setbeamercolor{normal text}{fg=white}
+% \setbeamercolor{structure}{fg=mycyan}
+
+\begin{document}
+%\unitlength=2mm
+
+% выводим заглавие
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Plan for the lecture}
+  \begin{itemize}
+    \item Recall Euclidean space: $\mathbb{R}^n$, 
+    linear operator: $T: \mathbb{R}^n \to \mathbb{R}^m$
+    \pause\item Combine operators with inner product and space geometry:
+    \begin{enumerate}
+      \pause\item Orthogonal operators and motions (``rigid transformations'') of space
+      \pause\item Self-adjoint operators (algebraic approach), 
+      which is actually scaling the space along the orthogonal directions
+      \end{enumerate}
+    \pause
+    \item Singular values decomposition and its applications
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{0. Orthogonal Projectors}
+  An \textbf{orthogonal projector} is a linear operator $P$ in a Euclidean space 
+  $\mathbb{R}^n$ that satisfies the following properties:
+  \begin{itemize}
+    \pause\item $P^2 = P$, i.e., $P$ is idempotent
+    \pause\item $P^T = P$, i.e., $P$ is self-adjoint
+  \end{itemize}
+
+  \pause
+  Geometrically, the action of an orthogonal projector $P$ 
+  on a vector $x$ in the space results in a new vector 
+  $y = Px$ that lies on a subspace $U \subseteq \mathbb{R}^n$. 
+  The subspace $U$ is the image of $P$, and the difference vector 
+  $x - y$ is orthogonal to $U$. 
+
+  If $U$ has an orthonormal basis $\{u_1, u_2, \dots, u_k\}$, 
+  then the matrix representation of $P$ can be given as:
+  $$P = \sum_{i=1}^{k} u_i u_i^T$$
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Notation}
+    $\operatorname{pr}_U \mathbb{R}^n$ — orthogonal projector 
+    on $U$ along $U^\perp$
+  \end{block}
+  \pause\vspace{0.5cm}
+  \begin{itemize}
+    \item $U + U^\perp = \mathbb{R}^n$
+    \item $U \cap U^\perp = 0$
+    \pause
+    \item $\langle x, y\rangle = x^T y$
+    \item $U = \operatorname{span}\langle u_1, u_2, \dots, u_k\rangle$
+    \item $A = (u_1 \mid \dots \mid u_k)$
+    \item $U^\perp = \{y \in \mathbb{R}^n \mid A^Ty = 0\}$
+  \end{itemize}
+
+  \vspace{0.5cm}
+  Then $\operatorname{pr}_U v = A \left(A^TA \right)^{-1}A^Tv$
+\end{frame}
+
+
+\begin{frame}{Least Squares Method (LSM)}
+
+  Suppose we have system of linear equations $Ax=b \in \mathbb{R}^m,\ x \in \mathbb{R}^n$.
+
+  \pause
+  As we've already known it may have solution and then $|Ax-b| = 0$ or may not.
+
+  \pause
+  The \textbf{Least Squares Method} is a widely used technique 
+  for fitting a model to data by minimizing the sum of the squares 
+  of the residuals (i.e., the differences between observed values 
+  and predicted values):
+
+  $$|Ax-b| \to \min$$
+
+  \pause
+  \begin{block}{Question}
+    Ok, but where are the actual \textbf{squares}?
+  \end{block}
+
+  \pause
+  $$|x| = \sqrt{\langle x^T, x\rangle} = \sqrt{x_1^2 + \dots + x_n^2}$$
+\end{frame}
+
+
+\begin{frame}
+  The Least Squares solution can be found using various techniques, such as:
+  \begin{itemize}
+    \pause\item Normal equations — below
+    \pause\item Gradient descent (this is Machine Learning)
+    \pause\item Singular Value Decomposition (SVD) — at the end of the lecture
+  \end{itemize}
+
+  \pause
+  \vspace{1cm}
+  \begin{itemize}
+    \item $A = (A_1 \mid \dots \mid A_n)$
+    \item $x_1A_1 + \dots + x_nA_n = \operatorname{pr}_U b$ 
+    (geometric intuition and if columns of $A$ are linearly independent)
+    \pause
+    \item $\operatorname{pr}_U b = \operatorname{pr}_U Ax = A \left(A^TA \right)^{-1}A^Tb$
+    \item $x = \left(A^TA \right)^{-1}A^Tb$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{LSM in machine learning world}
+  \pause
+  Given a set of data points $\{(x_i, y_i)\}_{i=1}^{m}$ and 
+  a model function $f(x, \boldsymbol{\theta})$ 
+  with parameters $\boldsymbol{\theta}$, 
+  the goal is to find the optimal values of $\boldsymbol{\theta}$ 
+  that minimize the objective function:
+
+  $$Q(\boldsymbol{\theta}) = \sum_{i=1}^{m} (y_i - f(x_i, \boldsymbol{\theta}))^2$$
+
+  \pause
+  In the context of linear regression, the model function is a linear combination of the parameters:
+
+  $$f(x, \boldsymbol{\theta}) = \theta_0 + \theta_1 x_1 + \dots + \theta_n x_n$$
+\end{frame}
+
+
+\begin{frame}{Regularization}
+  \pause
+  It is a technique used to prevent overfitting 
+  in machine learning models by adding a penalty term to the objective function.
+  This helps to reduce the complexity of the model and improve generalization.
+
+  \pause
+  The objective function with regularization can be written as:
+
+  $$Q(\boldsymbol{\theta}) = \sum_{i=1}^{m} (y_i - f(x_i, \boldsymbol{\theta}))^2 + \lambda R(\boldsymbol{\theta})$$
+
+  where $\lambda$ is the regularization parameter and $R(\boldsymbol{\theta})$ is the regularization term. Common regularization techniques include:
+
+  \begin{itemize}
+    \item \textbf{Lasso (L1) regularization}: $R(\boldsymbol{\theta}) = \sum_{j=1}^{n} |\theta_j|$
+    \pause\item \textbf{Ridge (L2) regularization}: $R(\boldsymbol{\theta}) = \sum_{j=1}^{n} \theta_j^2$
+    \pause\item \textbf{Elastic Net}: A combination of L1 and L2 regularization
+  \end{itemize}
+
+  \pause
+  {\small 
+  Regularization techniques can be applied to other machine learning models 
+  as well, such as logistic regression, neural networks, and 
+  support vector machines.}
+\end{frame}
+
+
+\begin{frame}
+  For Ridge (L2) regularization in matrix notation, we have:
+  $$ x = \left(A^TA + \lambda E \right)^{-1}A^Tb $$
+\end{frame}
+
+
+\begin{frame}{1. Orthogonal Operators and Motions}
+  It is easy to prove that all these three properties are equivalent. 
+  The first condition is algebraic and the other two are geometric. 
+
+  \begin{itemize}
+    \pause\item An operator $U$ is a linear transformation 
+    that preserves the inner product, i.e., 
+    $\langle U\boldsymbol{x}, U\boldsymbol{y} \rangle = \langle \boldsymbol{x}, 
+    \boldsymbol{y} \rangle$ for all vectors 
+    $\boldsymbol{x}, \boldsymbol{y} \in \mathbb{R}^n$
+    \pause\item Linear operator preserves lengths and angles between vectors:
+    $ |U\boldsymbol{x}| = |\boldsymbol{x}|$, 
+    $\angle U\boldsymbol{x}, U\boldsymbol{y} = \angle \boldsymbol{x}, 
+    \boldsymbol{y}$
+    \pause\item Linear operator preserves lengths of vectors: 
+    $ |U\boldsymbol{x}| = |\boldsymbol{x}|$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Example}
+  For $\mathbb{R}^n$ and $\langle x, y \rangle = x^Ty$ we have:
+  \begin{itemize}
+    \item $x \mapsto Ax$
+    \item $xA^TAy = (Ax)^TAy = x^Ty \Rightarrow\ A^TA = E$ 
+  \end{itemize}
+
+  \pause \vspace{1cm}
+  \begin{block}{Orthogonal matrix}
+    For $A \in \mathbb{R}^n$ the following statements are equivalent:
+    \begin{itemize}
+      \item $A^TA = E$ (orthonormal columns)
+      \item $AA^T = E$ (orthonormal rows)
+      \item $A^T = A^{-1}$
+    \end{itemize}    
+  \end{block}
+
+  For any vector space with \textbf{orthonormal basis} 
+  it is general case of the motions' matrix.
+\end{frame}
+
+
+\begin{frame}{Eigenvalues and Eigenvectors of Motions}
+  Let $A$ be an orthogonal operator that represents a motion in a Euclidean space. Consider an eigenvector $v$ and its corresponding eigenvalue $\lambda$ such that:
+  
+  \[
+  Av = \lambda v
+  \]
+  
+  \pause
+  Since $A$ is orthogonal, its columns form an orthonormal basis, and we have:
+  
+  \[
+  A^TA = AA^T = E
+  \]
+  
+  \pause
+  Multiplying the eigenvector equation by $A^T$ from the left:
+  
+  \[
+  A^TAv = A^T(\lambda v)
+  \]
+  
+  \pause
+  Using the property $A^TA = E$, we obtain:
+  
+  \[
+  v = \lambda A^Tv
+  \]  
+\end{frame}
+
+
+\begin{frame}
+  This shows that $v$ is also an eigenvector of $A$ with the same eigenvalue $\lambda$. Furthermore, since $A$ is orthogonal, the eigenvalues satisfy the condition:
+  
+  \[
+  |\lambda|^2 = 1
+  \]
+  
+  \pause
+  Therefore, the eigenvalues of a motion are either $1$ or $-1$. 
+  
+  \pause
+  The eigenvectors corresponding to the eigenvalue $1$ represent points that remain fixed under the motion, while eigenvectors corresponding to the eigenvalue $-1$ represent points that are reflected through the origin.
+
+  \begin{block}{Wonderful Remark}
+    $$\det A = \pm 1 $$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Examples of Motions in $\mathbb{R}^2$}
+  \begin{itemize}
+    \item \textbf{Rotation around the origin:}
+      \[
+      A_\theta = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}
+      \]
+      Rotates the plane counterclockwise by an angle $\theta$
+    
+    \pause\item \textbf{Reflection across the line $y = x$:}
+      \[
+      A_{y=x} = \begin{pmatrix} 0 & 1 \\ 1 & 0 \end{pmatrix}
+      \]
+      Reflects points across the line $y = x$
+
+    \pause\item \textbf{Reflection across the line $y = x$:}
+      \[
+        A = \begin{pmatrix} \cos\theta & \sin\theta \\ \sin\theta & -\cos\theta \end{pmatrix}
+      \]
+      Reflects points across the line $y = x\tan \frac{\theta}{2} $
+    \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Examples of Motions in $\mathbb{R}^3$}
+  \begin{itemize}
+    \item \textbf{Rotation around the $x$-axis:}
+      \[
+      A_{\theta,x} = \begin{pmatrix} 1 & 0 & 0 \\ 0 & \cos\theta & -\sin\theta \\ 0 & \sin\theta & \cos\theta \end{pmatrix}
+      \]
+      Rotates the space counterclockwise by an angle $\theta$ around the $x$-axis
+    
+    \pause
+    \item \textbf{Reflection across the $xy$-plane:}
+      \[
+      A_{xy} = \begin{pmatrix} 1 & 0 & 0 \\ 0 & 1 & 0 \\ 0 & 0 & -1 \end{pmatrix}
+      \]
+      Reflects points across the $xy$-plane
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{General Form of Matrix for Motions in $\mathbb{R}^n$}
+  A motion in $\mathbb{R}^n$ can be represented by an orthogonal matrix with the following structure:
+  \[
+  A = \begin{pmatrix}
+    \pm 1 & & & & & & & \\
+      & \ddots & & & & & & \\
+      & & \pm 1 & & & & & \\
+      & & & \cos\theta_1 & -\sin\theta_1 & & & \\
+      & & & \sin\theta_1 & \cos\theta_1 & & & \\
+      & & & & & \ddots & & \\
+      & & & & & & \cos\theta_k & -\sin\theta_k \\
+      & & & & & & \sin\theta_k & \cos\theta_k
+  \end{pmatrix}
+  \]
+  where $k \le \frac{n}{2}$ and the 2$\times$2 blocks with $\sin$ and $\cos$ terms represent rotations in the corresponding 2-dimensional subspaces.
+
+  The $\pm 1$ entries on the diagonal can represent reflections and 
+  identity transformations in the corresponding 1-dimensional subspaces.
+\end{frame}
+
+
+\begin{frame}{2. Self-Adjoint Operators}
+  Consider an operator $A: V \to V$ on an inner product space $V$. 
+  By definition adjoint operator $A^*$ holds:
+  \[
+  \langle Ax, y \rangle = \langle x, A^*y \rangle, \quad \forall x, y \in V
+  \]
+    
+  For orthonormal basis
+  \[
+  x^TA^Ty = (Ax)^T y = x^TA^*y\ \Rightarrow\ A^* = A^T
+  \]
+
+  \begin{block}{Definition}
+    $A$ is called \textit{self-adjoint} (or \textit{Hermitian}) if 
+    it satisfies the following condition:
+    \[
+    \langle Ax, y \rangle = \langle x, Ay \rangle, \quad \forall x, y \in V
+    \]      
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Properties of self-adjoint operators}
+  \begin{itemize}
+    \pause\item All eigenvalues are real: 
+    $\operatorname{Spec}_{\mathbb{C}} A = \operatorname{Spec}_{\mathbb{R}} A$
+    \pause\item Eigenvectors corresponding to distinct eigenvalues are orthogonal:
+    $Av = \lambda v,\ Au = \mu u\ \Rightarrow\ v \perp u$
+    \pause\item Self-adjoint operators can be diagonalized by an orthogonal matrix:
+    $\exists e_1, \dots e_n$ — orthonormal basis: 
+    $A = \operatorname{diag}(\lambda_1,\dots,\lambda_n)$
+  \end{itemize}
+
+  \pause
+  \begin{block}{Remark}
+    You should use Gram-Schmidt orthogonalization process 
+    to get orthonormal parts of basis, corresponding certain eigenvalue
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Singular Value Decomposition (SVD)}
+  Suppose $\phi: V \to U$ on the Euclidean spaces $U, V$. 
+  You need to find orthonormal bases to simplify the matrix $A_\phi$.
+  
+  \vspace{0.5cm}
+  The Singular Value Decomposition (SVD) is a factorization of a real or complex matrix $A \in \mathbb{R}^{m \times n}$. The SVD of $A$ is given by:
+
+  \[
+  A = U\Sigma V^T
+  \]
+
+  Where:
+  \begin{itemize}
+    \pause\item $U \in \mathbb{R}^{m \times m}$ is an orthogonal matrix containing the left singular vectors of $A$
+    \pause\item $\Sigma \in \mathbb{R}^{m \times n}$ is a diagonal matrix 
+    with non-negative diagonal entries, called singular values, 
+    in non-increasing order ($\sigma_1 \geq \sigma_2 \geq \dots \geq 0$)
+    \pause\item $V \in \mathbb{R}^{n \times n}$ is an orthogonal matrix containing the right singular vectors of $A$
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Explanations and applications}
+  \[
+  A = \begin{bmatrix}
+    u_1 \mid & \dots & \mid u_n
+  \end{bmatrix}
+  \begin{bmatrix}
+   \sigma_1& & & & \\  
+        & \ddots & & & \\  
+        &   & \sigma_r & & \\  
+        & & & 0 &  \\
+        & & &   & \ddots
+  \end{bmatrix}
+  \begin{bmatrix}
+    v_1^T \\ \vdots \\ v_n^T
+  \end{bmatrix}  
+  \]
+  \[
+  A = \sigma_1 u_1 v_1^T + \dots + \sigma_r u_r v_r^T
+  \]
+
+  \begin{itemize}
+    \pause\item Data compression: keep only first $k$ terms ($mn \mapsto k(m+n+1) $)
+    \pause\item Removing the background of a video stream from static camera \\
+    {\small Represent the frames as vectors and make up the matrix $A$ 
+    from them all. Make SVD and zero first $k$ terms to remove background.}
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}{Object-feature matrix and SVD}
+  \[
+  U^T \begin{bmatrix}
+    A_1 \mid & \dots & \mid A_n
+  \end{bmatrix} =
+  \begin{bmatrix}
+   \sigma_1& & & & \\  
+        & \ddots & & & \\  
+        &   & \sigma_r & & \\  
+        & & & 0 &  \\
+        & & &   & \ddots
+  \end{bmatrix}
+  V^T
+  \]
+
+  \vspace{0.5cm}
+  Actually in $V^T$ you've got new features with their importances.
+\end{frame}
+
+
+\begin{frame}{Types of SVD and Storage Considerations}
+  Depending on the application, there are different types of SVD and storage options:
+
+  \begin{itemize}
+    \item \textbf{Full SVD:}
+      \[
+      A = U\Sigma V^T
+      \]
+      \begin{itemize}
+        \item Computes all singular values and vectors
+        \item Storage: $O(m^2 + mn + n^2)$
+      \end{itemize}
+
+    \pause
+    \item \textbf{Thin (Reduced) SVD:}
+      \[
+      A = U_r\Sigma_r V_r^T
+      \]
+      \begin{itemize}
+        \item Computes only the first $r = \min(m, n)$ singular values and vectors
+        \item Storage: $O(mr + nr)$
+      \end{itemize}
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \begin{itemize}
+    \item \textbf{Truncated SVD:}
+    \[
+    A_k \approx U_k\Sigma_k V_k^T
+    \]
+    \begin{itemize}
+      \item Computes only the first $k$ largest singular values and vectors ($k \ll \min(m, n)$)
+      \item Storage: $O(mk + nk)$
+      \item Often used for dimensionality reduction and approximation
+    \end{itemize}
+  \end{itemize}
+  
+  Storage requirements vary depending on the type of SVD and the number of singular values and vectors needed for the application.
+\end{frame}
+
+
+\begin{frame}{How to Find SVD?}
+  To compute the SVD $A = U\Sigma V^T$ of a given matrix $A \in \mathbb{R}^{m \times n}$:
+
+  \begin{enumerate}
+    \pause\item Calculate the eigenvectors and eigenvalues of $AA^T$.
+      \begin{itemize}
+        \item Eigenvectors of $AA^T$: columns of $U$
+      \end{itemize}
+
+      $$ AA^T = U\Sigma V^T V\Sigma^T U^T = U\Sigma \Sigma^T U^T$$
+
+
+    \pause\item Sort the eigenvalues in decreasing order, and rearrange the eigenvectors accordingly.
+      \begin{itemize}
+        \item $\chi_{AA^T} = 0 \to \lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_r \geq 0$
+      \end{itemize}
+
+    \pause\item Form the diagonal matrix $\Sigma$ using the square roots of the sorted eigenvalues.
+      \[
+      \sigma_{i} = \sqrt{\lambda_i}
+      \]
+
+    \pause\item $V:\ A^T = V\Sigma^T U^T\ \Rightarrow\ A^TU = V\Sigma^T \ \Rightarrow\ v_i = \frac{A^Tu_i}{\sigma_i}$ for $i = 1, \dots, r$
+    \pause\item $\langle v_1, \dots, v_r\rangle^\perp = \{ y \mid Ay=0\} \mapsto $ FSS, G.-Sh., norm $\mapsto y_1, \dots, y_{n-r}$
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}{Example}
+  $$A = \begin{bmatrix}
+    1 & 0 & 1 \\
+    1 & 1 & 0
+  \end{bmatrix}\ \pause\to\ AA^T = \begin{bmatrix}
+    2 & 1 \\
+    1 & 2
+  \end{bmatrix}$$
+
+  \pause$$\chi_{AA^T}(t) = t^2 -4t+3 \mapsto \lambda_1 = 3, \lambda_2 = 1 
+  \mapsto \sigma_1 = \sqrt{3}, \sigma_2 = 1$$
+
+  \pause$$\lambda_1: (AA^T - 3E) x = 0 \mapsto \begin{bmatrix}
+    -1 & 1 \\
+     1 & -1
+  \end{bmatrix}x=0 \mapsto \begin{bmatrix}
+    1 \\ 1
+  \end{bmatrix} \mapsto \begin{bmatrix}
+    1/\sqrt{2} \\ 1/\sqrt{2}
+  \end{bmatrix}$$
+
+  \pause$$\lambda_2: (AA^T - E) x = 0 \mapsto \begin{bmatrix}
+    1 & 1 \\
+    1 & 1
+  \end{bmatrix}x=0 \mapsto \begin{bmatrix}
+    -1 \\ 1
+  \end{bmatrix} \mapsto \begin{bmatrix}
+    -1/\sqrt{2} \\ 1/\sqrt{2}
+  \end{bmatrix}$$
+
+  \pause$$ A = \begin{bmatrix}
+    \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\ 
+    \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}
+  \end{bmatrix} 
+  \begin{bmatrix}
+    \sqrt{3} & 0 & 0 \\
+      0 & 1 & 0
+  \end{bmatrix} V
+  $$
+\end{frame}
+
+
+\begin{frame}
+  $$v_1 = \frac{A^Tu_1}{\sigma_1} = \frac{1}{\sqrt{6}} \begin{bmatrix}
+    2 \\ 1  \\ 1
+  \end{bmatrix}, 
+  v_2 = \frac{A^Tu_2}{\sigma_2} = \frac{1}{\sqrt{2}} \begin{bmatrix}
+    0 \\ 1  \\ -1
+  \end{bmatrix}$$
+
+  \pause $$y_1 = [1, -1, -1]^T\ \mapsto\ \frac{1}{\sqrt{3}}[1, -1, -1]^T$$
+
+  \pause $$ A = \begin{bmatrix}
+    \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\ 
+    \frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}}
+  \end{bmatrix} 
+  \begin{bmatrix}
+    \sqrt{3} & 0 & 0 \\
+      0 & 1 & 0
+  \end{bmatrix} 
+  \begin{bmatrix}
+    \frac{2}{\sqrt{6}} & \frac{1}{\sqrt{6}} & \frac{1}{\sqrt{6}} \\ 
+     0 & \frac{1}{\sqrt{2}} & -\frac{1}{\sqrt{2}} \\
+     \frac{1}{\sqrt{3}} & -\frac{1}{\sqrt{3}} & -\frac{1}{\sqrt{3}}
+  \end{bmatrix}$$
+
+  \begin{block}{Remark}
+    For ``tall'' matrices better to start from the $V$ and $A^TA$ matrices
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Low-Rank Matrix Approximation}
+  The SVD allows us to approximate a given matrix $A \in \mathbb{R}^{m \times n}$ with a low-rank matrix.
+
+  \begin{itemize}
+    \pause\item Given the SVD of $A = U \Sigma V^T$, we can approximate $A$ by a rank-$k$ matrix, $A_k$:
+      \[
+      A_k = U_k \Sigma_k V_k^T
+      \]
+      where $U_k$, $\Sigma_k$, and $V_k$ are truncated versions of $U$, $\Sigma$, and $V$
+
+    \pause\item $U_k \in \mathbb{R}^{m \times k}$ consists of the first $k$ columns of $U$
+
+    \pause\item $\Sigma_k \in \mathbb{R}^{k \times k}$ consists of the $k$ largest singular values in $\Sigma$
+
+    \pause\item $V_k \in \mathbb{R}^{n \times k}$ consists of the first $k$ columns of $V$
+
+    \pause\item The approximation error can be measured using the Frobenius norm:
+      \[
+      \|A - A_k\|_F = \sqrt{\sum_{i=k+1}^{\min(m, n)} \sigma_i^2} = \sqrt{\operatorname{tr}(B^TB)}
+      \]
+      where $\sigma_i$ are the singular values of $A$
+  \end{itemize}
+\end{frame}
+
+\end{document}
