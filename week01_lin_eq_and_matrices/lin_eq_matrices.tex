@@ -980,7 +980,7 @@ $I_1, \dots, I_4 \in \mathbb{R}$ are variables, $R_i$ — resistances
  \frametitle{Lemma}
     Let $A \in M_{mn}(\mathbb{R}), B \in M_{nm}(\mathbb{R})$.
     
-    Prove that $E - AB$ is reversible $\Leftrightarrow$ $E - AB$ is reversible.
+    Prove that $E - AB$ is reversible $\Leftrightarrow$ $E - BA$ is reversible.
 
   \pause
   \begin{itemize}
@@ -1009,7 +1009,7 @@ $I_1, \dots, I_4 \in \mathbb{R}$ are variables, $R_i$ — resistances
   $p(A) = a_0E + a_1A + \dots + a_k A^k$
 
   \vspace{1cm}\pause
-  \begin{block}{Vanishing polynomial}
+  \begin{block}{Annihilating polynomial}
     $\forall A \in M_{n}(\mathbb{R})\ \exists$ polynomial $p(x) \neq 0:\ p(A) = 0$
   \end{block}
 
@@ -1033,7 +1033,7 @@ $I_1, \dots, I_4 \in \mathbb{R}$ are variables, $R_i$ — resistances
 \end{frame}
 
 
-\begin{frame}{Minimal vanishing polynomial}
+\begin{frame}{Minimal annihilating polynomial}
     \begin{itemize}
       \item $p_{min}(A) = 0$
       \item senior coefficient = 1
@@ -1071,7 +1071,7 @@ $I_1, \dots, I_4 \in \mathbb{R}$ are variables, $R_i$ — resistances
     \begin{enumerate}
       \pause\item $\mathrm{spec}_{\mathbb{R}} A = 
       \{ \text{real roots of } p_{min}\}$
-      \pause\item for all vanishing polynomials 
+      \pause\item for all annihilating polynomials 
       $g(A) = 0 \Rightarrow p_{min} \mid g$
       \pause\item $g(A) = 0 \Rightarrow \mathrm{spec}_{\mathbb{R}} A \subseteq 
       \{ \text{real roots of } g \}$
@@ -1090,7 +1090,7 @@ $I_1, \dots, I_4 \in \mathbb{R}$ are variables, $R_i$ — resistances
     $$
   
     $$p(x) = x^2 + 1$$
-    is vanishing polynomial
+    is annihilating polynomial
 
     \begin{align*}
       \mathrm{spec}_{\mathbb{R}} A &\subseteq \{\text{real roots of } x^2+1 \}\\

@@ -694,7 +694,7 @@
 
   \pause
   \begin{block}{Note}
-    \small This is a non-trivial result given by the vanishing polynomial 
+    \small This is a non-trivial result given by the annihilating polynomial 
     of degree $n$, and in the general case it is impossible 
     to reduce this degree.
   \end{block}
@@ -759,22 +759,22 @@
 
 
 \begin{frame}{Task 3}
-  Let matrix $A \in M_n(\mathbb{R})$. Find $\det \mathcal{A}$,
-  where $\mathcal{A} = (C_{ij})^T$
+  Let matrix $A \in M_n(\mathbb{R})$. Find $\det \widehat{A}$,
+  where $\widehat{A} = (C_{ij})^T$
 
   \pause
   \begin{block}{Solution}
     \pause
-    $$\det \mathcal{A} = \det A^{n-1}$$
+    $$\det \widehat{A} = \det A^{n-1}$$
   
     \pause
-    $$A\mathcal{A} = \mathcal{A} A = \det A \cdot E $$
-    $$\det A \det\mathcal{A} = \det (\det A \cdot E ) = \det A^n$$
+    $$A\widehat{A} = \widehat{A} A = \det A \cdot E $$
+    $$\det A \det\widehat{A} = \det (\det A \cdot E ) = \det A^n$$
     If $\det A \neq 0$, then we've solved. 
 
-    Otherwise, $\mathcal{A} A = 0 \Rightarrow \exists$ column 
-    $A_i \neq 0: \mathcal{A} A_i = 0 \Rightarrow \mathcal{A}$ is irreversible
-    $$ \Rightarrow \det \mathcal{A} = 0$$
+    Otherwise, $\widehat{A} A = 0 \Rightarrow \exists$ column 
+    $A_i \neq 0: \widehat{A} A_i = 0 \Rightarrow \widehat{A}$ is irreversible
+    $$ \Rightarrow \det \widehat{A} = 0$$
   \end{block}
 \end{frame}
 
