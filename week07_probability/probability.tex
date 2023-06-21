@@ -1,0 +1,745 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{0.5 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 7. Probability spaces}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{June 21, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+% \setbeamercolor{background canvas}{bg=gray}
+% \setbeamercolor{normal text}{fg=white}
+% \setbeamercolor{structure}{fg=mycyan}
+
+\begin{document}
+
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Intro to the philosophy of probability theory}
+  \begin{itemize}
+    \item The first part of the probability is some kind of mental model 
+    on how to properly \textbf{understand and apply} it
+    \item The second part is a complicated mathematical formalism 
+    that is needed to make the theory consistent, filtering some ``bad'' sets and functions
+    (here is $\sigma$-algebras, measurable functions, Lebesgue integrals etc.)
+    \pause
+    \item In real life and applications, it seems that there 
+    are no non-measurable sets and all these theoretical contradictions at all
+    \item Therefore, we can build the entire theory of probability 
+    not completely rigorously, but cutting mathematical corners and 
+    getting the intuition necessary to use probability
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Mental model of random variable}
+  You can think of random variable as a variable whose possible values 
+  are some outcomes of a random phenomenon 
+  (some \textbf{black box}, answering your questions).
+  
+  \vspace{0.5cm}
+  1. More formally, a random variable is a function $X$ from 
+  a sample space $S$ to the set of elementary outcomes $\Omega$. 
+  This function assigns to each element $s$ in the sample space 
+  a unique value $X(s)$.
+  
+  \vspace{0.5cm}
+  \pause
+  The two main types of random variables are:
+  \begin{itemize}
+    \pause
+    \item Discrete Random Variables: These are variables that take on a countable number of distinct values. Examples include flipping a coin, rolling a die, etc.
+    \pause
+    \item Continuous Random Variables: These are variables that can take on any value in a given range or interval. Examples include the height of a person, the weight of an object, etc.
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}
+  \begin{enumerate}
+    \item[2.] Event is some subset of the set of elementary outcomes $\Omega$
+    \item[3.] Probability (probability measure) is function $P: 2^\Omega \to [0,1]$
+    
+    \pause For any event $A \mapsto P(A)$
+    \begin{itemize}
+      \pause\item $P(\emptyset) = 0,\ P(\Omega) = 1$
+      \pause\item $A \cap B = \emptyset \Rightarrow P(A \cup B) = P(A) + P(B)$
+      \pause\item (as above plus some continuity) $A_1, A_2, \ldots, A_n, \ldots \subseteq \Omega,\  A_i \cap A_j = \emptyset$
+      $$ P(\bigcup\limits_{i=1}^{\infty} A_i) = \sum\limits_{i=1}^{\infty} P(A_i) $$
+    \end{itemize}
+  \end{enumerate}
+
+  \pause
+  \begin{block}{Technical problem}
+    If $\Omega$ is more than countable, then there is no such probability measures ;)
+  \end{block}
+  So we will ignore this technical and mathematical problem 
+  and we will work with pair $(\Omega, P)$ instead of triple $(\Omega, \Sigma, P)$ 
+  as our Probability Space
+\end{frame}
+
+
+\begin{frame}{Remarks}
+  The probability distribution of a random variable describes how the probabilities 
+  are distributed over the values of the random variable.
+
+  \pause
+  \vspace{0.5cm}
+  \begin{block}{Question}
+    What does it mean for events, that $A \subseteq B$?
+  \end{block}
+
+  \pause
+  \vspace{0.5cm}
+  It means, that $A \Rightarrow B$, so $P(A) \leq P(B)$ and 
+  $P(B \backslash A) = P(B)-P(A)$
+
+  For $A, B \subseteq \Omega$ in general case $P(B \backslash A) = P(B)-P(A\cap B)$
+
+  \pause
+  \vspace{0.5cm}
+  Also there is negation $ \overline{A}  = \Omega \backslash A$ and $P(A) + P(\overline{A}) = 1$
+
+  For events $\cap$ is AND, $\cup$ is OR, so
+  $$P(A\cup B) = P(A)+P(B)-P(A\cap B)$$
+
+\end{frame}
+
+
+\begin{frame}{Example}
+  For rolling a die $\Omega = \{1, 2, 3, 4, 5, 6\}$
+
+  \pause
+  $P: 2^\Omega \to [0, 1]$, but for any event $A = \{1, 2, 5\}$
+  $$ P(A) = P(\{1\}) + P(\{2\}) + P(\{5\})$$
+
+  \pause
+  So we need to know only $p_1, p_2, \dots, p_6$, such that 
+  $\sum\limits_{i=1}^6 p_i = 1$.
+
+  \pause
+  This is why for any finite or countable set $\Omega$ we only need to define 
+  the probabilities of elements and then: $$P(A) = \sum\limits_{x \in A} P(\{x\})$$
+\end{frame}
+
+
+\begin{frame}{Example with continium set}
+  Suppose your have some real value, i.e. $\Omega = \mathbb{R}$
+
+  $$A \subseteq \mathbb{R} \mapsto P(A)$$
+
+  \pause
+  \begin{block}{Natural way}
+    Is to define probability density as function $p:\mathbb{R} \to \mathbb{R}$:
+    \begin{itemize}
+      \pause\item $\forall x\ p(x) \geq 0$
+      \pause\item $\int\limits_{\mathbb{R}} p(x)dx = 1$
+    \end{itemize}
+  \end{block}
+    
+  \pause
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        Then $$P(A) = \int\limits_{A} p(x)dx$$      
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.8, transform shape]
+          \draw[->] (-1.5, 0) -- (2, 0) node[right] {$x$};
+          \draw[->] (0,-0.5) -- (0, 1.5) node[above] {$p(x)$};
+          \draw[thick, smooth, domain=-1.5:2, variable=\x, blue] plot 
+          ({\x}, {0.3*exp(-(\x+0.5)*(\x+0.5)/0.2) + 0.7*exp(-(\x-0.7)*(\x-0.7)/0.2)});
+          \fill[blue!20, domain=0.5:1, variable=\x] (0.5, 0) -- 
+          plot ({\x}, {0.3*exp(-(\x+0.5)*(\x+0.5)/0.2) + 0.7*exp(-(\x-0.7)*(\x-0.7)/0.2)}) -- 
+          (1, 0) -- cycle;
+          \node at (0.75, -0.25) {$A$};
+        \end{tikzpicture}        
+      \end{column}
+  \end{columns}
+
+  \vspace{0.3cm}
+  If we think about $P(A)$ as <<mass>>, than $p(x)$ is density.
+\end{frame}
+
+
+\begin{frame}{Frequency interpretation}
+  \pause
+  \begin{block}{Question}
+    How to think about probability distribution $P$ in pair $(\Omega, P)$ 
+    from the perspective of \textbf{black box}, answering your questions?      
+  \end{block}
+
+  \pause
+  Suppose we have potentially infinite process of events generation:
+  $$\omega_1, \omega_2, \dots, \omega_n, \dots $$
+
+  \pause
+  Then frequency limit
+  $$ \lim\limits_{n \to \infty} \frac{\# \{i : \omega_i \in A \mid 1 \leq i \leq n\}}{n} = P(A)$$
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Random Permutations}
+
+  A permutation of a set is an arrangement of its elements in a particular order. For a set of $n$ elements, there are $n!$ (read as 'n factorial') possible permutations. 
+
+  \pause
+  \begin{definition}[Random Permutation]
+    A random permutation of a set of $n$ elements $\sigma$ is a permutation 
+    chosen uniformly at random from the set of all $n!$ permutations, denoted as $S_n$.
+  \end{definition}
+
+  In other words, each of the $n!$ permutations is equally likely to be chosen.
+
+  \pause
+  \begin{example}
+    For a set with three elements $\{1, 2, 3\}$, there are $3! = 6$ permutations: 
+    \[
+    (1,2,3), (1,3,2), (2,1,3), (2,3,1), (3,1,2), (3,2,1)
+    \]
+    In a random permutation, each of these six arrangements is equally likely, 
+    so $P(\sigma) = \frac{1}{6}$ for any permutation $\sigma \in S_3$.
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{Task 1}
+  Let event $A$ be <<$\sigma$ is cycle of length $n$>>. What is $P(A)$?
+
+  \pause
+  \begin{block}{Solution}
+    This is a purely combinatorial problem and 
+
+    $$P(A) = \frac{\# \text{(of n-length cycles)}}{n!}$$
+    
+    \pause
+    The numerator equals $\frac{n!}{n}$, so $P(A) = \frac{1}{n}$.
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}{Task 2}
+  Let event $A$ be <<$\sigma$ is cycle of length $k < n$>>. What is $P(A)$?
+
+  \vspace{1cm}
+  \pause
+  \begin{block}{Solution}
+    We need to chose $k$ elements from all to form a cycle — this is 
+    $\begin{pmatrix}
+      n \\ k
+    \end{pmatrix} = \frac{n!}{k!(n-k)!}$ variants.
+
+    \vspace{1cm}
+    \pause
+    Then we have $(k-1)!$ ways to build a certain cycle on $k$ elements.
+
+    \vspace{1cm}
+    \pause
+    The numerator equals $\begin{pmatrix}
+      n \\ k
+    \end{pmatrix} (k-1)!$, so $P(A) = \frac{1}{k(n-k)!}$. 
+    Compare the probability with the previous one.
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Conditional Probability}
+  Suppose we ignore all the events from our \textbf{black box}, 
+  which is not from $B$.
+
+  \pause
+  \begin{definition}
+    The conditional probability of an event $A$ given that another event $B$ 
+    has occurred is denoted by $P(A|B)$ and is defined as:
+    \[
+    P(A|B) = \frac{P(A \cap B)}{P(B)} 
+    \]
+    where $P(B) > 0$.
+  \end{definition}
+  
+  \begin{itemize}
+    \pause\item Conditional probability gives the probability of an event given that another event has occurred.
+    \pause\item If events $A$ and $B$ are independent, then $P(A|B) = P(A)$.
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{Example}
+  If the probability that it rains today is 0.5 (event $B$) and 
+  the probability that it rains both today and tomorrow is 0.3 (event $A$), 
+  then the conditional probability of it raining tomorrow given that 
+  it rains today, $P(A|B)$, is $\frac{0.3}{0.5} = 0.6$.
+\end{frame}
+
+
+\begin{frame}{When events $A$ and $B$ are independent?}
+  The area of event $A$ with respect to $\Omega$ is the same as the 
+  area of event $A\cap B$ with respect to $B$. So
+
+  $$P(A) =  P(A|B)\ \Rightarrow\ P(A \cap B) = P(A)P(B) \Leftrightarrow A \indep B$$
+
+  \begin{block}{Remarks}
+    \begin{itemize}
+      \pause\item $A \indep B \Leftrightarrow A \indep \overline{B}$
+      \pause\item If $P(A) > 0$ and $P(B) > 0$, but $P(A \cap B) = \emptyset$ 
+      then they are dependent
+      \pause\item If $A \subseteq B$ and $P(B) \neq 1$ then they are dependent
+      \pause\item On contrary, $\emptyset$ and $\Omega$ are independent with any other $A \subseteq \Omega$
+    \end{itemize}  
+  \end{block}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mutual Independence}
+
+  \begin{definition}
+    A collection of events $\{A_i\}_{i=1}^{n}$ is said to be 
+    \textit{Mutually Independent} if for every subset 
+    $\{A_{i_j}\}_{j=1}^{k}$ of the collection, 
+    the joint probability of all events in the subset is equal 
+    to the product of their individual probabilities:
+    \[
+    P\left(\bigcap_{j=1}^{k} A_{i_j}\right) = \prod_{j=1}^{k} P(A_{i_j})
+    \]
+  \end{definition}
+  
+  \begin{itemize}
+    \pause\item Mutual independence is a stronger condition than pairwise independence
+    \pause\item If events are mutually independent, then they are pairwise independent, but not vice versa
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Examples}
+  \begin{block}{First one}
+    Tossing a fair coin multiple times. The outcome of each toss is 
+    an independent event. The outcome of any collection of tosses 
+    is the product of the probabilities of the individual tosses. 
+  \end{block}
+
+  \pause
+  \begin{block}{Second one}
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \begin{tikzpicture}[scale=0.7]
+          \draw[->] (-1,0) -- (5,0); % x-axis
+          \draw[->] (0,-1) -- (0,5); % y-axis
+          
+          % \draw[dashed] (1,1) rectangle (4,4); % square
+          \fill (1,1) circle[radius=3pt]; % bottom left vertex
+          \fill (1,4) circle[radius=3pt]; % top left vertex
+          \fill (4,1) circle[radius=3pt]; % bottom right vertex
+          \fill (4,4) circle[radius=3pt]; % top right vertex
+          
+          % \draw[dashed, red] (0,0) rectangle (1,4); % top left rectangle
+          \draw[dashed, green, rounded corners] (0.5, 0.5) rectangle (4.5, 1.5); % bottom right rectangle
+          \draw[dashed, orange, rounded corners] (0.7, 0.7) rectangle (1.3, 4.3); % top right rectangle
+          \draw[dashed, blue, rounded corners, rotate around={45:(1, 0.57)}] (1, 0.57) rectangle (6, 1.3);
+        \end{tikzpicture}              
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        Suppose we have two fair coins. 
+        
+        \pause Pairwise independent 
+        $$ P({\color{orange}A}) = P({\color{blue}B}) = P({\color{green}C}) = \frac{1}{2}$$        
+
+        \pause But not mutually independent
+        $$ P({\color{orange}A}) P({\color{blue}B}) P({\color{green}C}) \neq 
+           P({\color{orange}A} \cap {\color{blue}B} \cap {\color{green}C}) $$
+        \pause ${\color{orange}A}$ and ${\color{blue}B}\ \Rightarrow\ {\color{green}C}$
+      \end{column}
+    \end{columns}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Task 3}
+  Consider $n$ coins, i.e. 
+  $\Omega = \left\{(a_1, \dots, a_n) \mid a_i \in \{0, 1\}\right\}$. 
+  If they are mutually independent, then
+  $$P((a_1, \dots, a_n)) = P(a_1)\cdot \ldots \cdot P(a_n) = \frac{1}{2^n}$$
+
+  \pause 
+  This way we can model the two librarians problem. 
+  Suppose two persons independently decide if they pick up each of 10 books:
+  $$ \begin{pmatrix}
+    a_1 & \dots & a_{10} \\
+    b_1 & \dots & b_{10}
+  \end{pmatrix}$$
+  So they simply toss 20 fair coins. 
+  
+  What is the probability of event, 
+  when they didn't pick the same book at the same time?
+\end{frame}
+
+
+\begin{frame}
+
+  \begin{block}{Solution}
+    \pause
+    It means we must have at least one $0$ in each column.
+  
+    \pause
+    I.e. $P = \left(\frac{3}{4}\right)^{10} \sim 0.056$    
+  \end{block}
+
+  \pause
+  \begin{block}{More general case}
+    $X = \{1, \dots, n\}$, $A_1, \dots, A_k \subseteq X$ — random independent equiprobable subsets
+
+    What is $P(A_1 \cap \dots \cap A_k = \emptyset)$?
+  \end{block}
+
+  \pause
+  Here we have $\Omega = \underset{k}{\underbrace{2^X \times \dots \times 2^X}}$
+
+  So we need $P(\forall \text{ column has } 0) = P(0 \in c_1 \cap \dots \cap 0 \in c_n)$
+
+  It turns out that theese events are mutually independent, hence we have
+  $P(0 \in c_1) \cdot \ldots \cdot P(0 \in c_n) = (1 - \frac{1}{2^k})^n$
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Law of Total Probability}
+
+  \pause
+  Let $B_1, B_2, \ldots, B_n$ be a partition of the event (sample) 
+  space $\Omega$, such that $P(B_i) > 0$ for all $i$. 
+  The Law (or Formula) of Total Probability states that for any event $A$, we have:
+  
+  \[
+  P(A) = \sum_{i=1}^{n} P(A | B_i) \cdot P(B_i)
+  \]
+
+  \pause
+  The law of total probability is a fundamental rule relating 
+  marginal probabilities and conditional probabilities. 
+
+  It is easy to see, because $P(A) = \sum\limits_{i=1}^{n} P(A \cap B_i)$
+
+  \pause
+  \begin{block}{Example}
+    \scriptsize
+    Suppose we have two boxes, one with 2 red and 3 green balls (box 1), and another with 3 red and 1 green ball (box 2). If we choose a box at random and then pick a ball, the law of total probability can be used to calculate the probability of drawing a red ball.
+    
+    \[
+    P(\text{{Red}}) = P(\text{{Red}} | \text{{Box 1}}) \cdot P(\text{{Box 1}}) + P(\text{{Red}} | \text{{Box 2}}) \cdot P(\text{{Box 2}})
+    \]
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Bayes' Theorem}
+
+  \pause
+  Bayes' theorem is a fundamental principle in the field of statistics and probability. It describes how to update the probabilities of hypotheses when given evidence.
+
+  The theorem is stated mathematically as the following equation:
+  
+  \[
+  P(H|E) = \frac{P(E|H) \cdot P(H)}{P(E)}
+  \]
+
+  where:
+  \begin{itemize}
+    \pause\item $P(H|E)$ is the probability of hypothesis $H$ given 
+    the evidence $E$ (a posteriori)
+    \pause\item $P(E|H)$ is the probability of the evidence given 
+    that the hypothesis is true (likelihood)
+    \pause\item $P(H)$ is the prior probability of $H$ being true before the evidence is accounted
+    \pause\item $P(E)$ is the total probability of the evidence
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Example}
+    Suppose a disease affects 1\% of a population. A test for the disease is 99\% accurate. If a person tests positive for the disease, Bayes' theorem can be used to find out the probability that they actually have the disease.
+    
+    \pause
+    \[
+    P(\text{{Disease}} | \text{{Positive Test}}) = \frac{P(\text{{Positive Test}} | \text{{Disease}}) \cdot P(\text{{Disease}})}{P(\text{{Positive Test}})}
+    \]
+
+    \pause
+    \[
+    \frac{0.99 \cdot 0.01}{0.99 \cdot 0.01 + 0.01 \cdot 0.99} = \frac{1}{2}
+    \]
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Task 4 (Casino)}
+  
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}[scale=1, auto,swap]
+        % draw the axes
+        \draw[->] (-1,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,5) node[above] {$y$};
+    
+        % draw the line y = N
+        \def\N{4} % choose the value for N here
+        \draw[dashed, color=blue] (-1,\N) node[above] {$y = N$} -- (4,\N);
+    
+        % draw the two arrows
+        \def\k{2} % choose the value for k here
+        \draw[->, color=green] (0,\k) -- (1,\k+1) node[left] {$p$};
+        \draw[->, color=red] (0,\k) -- (1,\k-1) node[left] {$1-p$};
+        
+        % label points
+        \node at (0,\k) [circle,fill,inner sep=1pt]{};
+        \node[left] at (0,\k) {$(0,k)$};
+        
+        \node at (1,\k+1) [circle,fill,inner sep=1pt]{};
+        \node[above right] at (1,\k+1) {$(1,k+1)$};
+        
+        \node at (1,\k-1) [circle,fill,inner sep=1pt]{};
+        \node[below right] at (1,\k-1) {$(1,k-1)$};
+      \end{tikzpicture}        
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      If you are lucky to score $N$, then you win and leave. 
+      If you lose all the money to zero, then the game also ends.
+
+      \pause
+      What is $\Omega$ here?
+      \pause
+      All the paths!
+
+      \pause
+      \begin{block}{Question}
+        Find the probability of winning.
+      \end{block}
+    \end{column}
+  \end{columns}  
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{Solution}
+    \pause\small
+    $P(k \text{ dollars and win since }0\text{ step}) = 
+     P(k \text{ dollars and win since }i\text{ step})$
+    
+     \pause
+     Let $p_k = P(k \text{ dollars and win})$ and we will try to find them all. So 
+     \pause
+     \begin{align*}
+      p_0 &= 0,\ p_N = 1 \\
+      p_k &= P(k \text{ dollars and win}|\text{ won on the fisrt step})p + \\ 
+      &P(k \text{ dollars and win}|\text{ lost on the fisrt step})(1-p) \\
+      p_k &= p_{k+1}p + p_{k-1}(1-p) \quad\Rightarrow\quad \lambda = \lambda^2 p + (1-p) \\
+      \lambda^2 &p - \lambda + (1-p) = 0 \quad\Rightarrow\quad \lambda_1 = \frac{1-p}{p},\ \lambda_2 = 1
+     \end{align*}
+  
+    \begin{columns}
+      \begin{column}{0.5\textwidth}
+        \pause
+        $$p \neq \frac{1}{2}$$
+        $p_k = c_1\left(\frac{1-p}{p}\right)^k + c_2$
+
+        From the boundary conditions:
+        $$\boxed{ p_k = \frac{p^N - p^{N-k}(1-p)^k}{p^N - (1-p)^N}}$$
+      \end{column}
+      \begin{column}{0.5\textwidth}
+        \pause
+        $$p = \frac{1}{2}$$
+        $p_k = \left(c_1 + c_2k\right) \lambda^k = c_1 + c_2k$
+        
+        From the boundary conditions:
+        $c_1 = 0, \ c_2 = \frac{1}{N} \Rightarrow \boxed{p_k = \frac{k}{N}}$
+      \end{column}
+    \end{columns}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Continuous Probability Distributions}
+  
+  \pause
+  \begin{definition}
+  A random variable X has a \textit{continuous distribution} if there exists a function $f(x)$ called the probability density function (pdf) of X such that for any two numbers $a$ and $b$ with $a \leq b$, 
+  \[ P(a \leq X \leq b) = \int\limits_{a}^{b} f(x) dx \]
+  \end{definition}
+  
+  \begin{itemize}
+    \pause\item $f(x) \geq 0$ for all $x$, and $\int\limits_{-\infty}^{\infty} f(x) dx = 1$
+    \pause\item Unlike a discrete distribution, $P(X = x) = 0$ for all $x$ in a continuous distribution
+    \pause\item The expected value (or mean) $\mu$ of X is given by $\mu = \int\limits_{-\infty}^{\infty} x f(x) dx$
+  \end{itemize}  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Examples}
+
+  \begin{itemize}
+    \pause\item The Uniform distribution on an interval $[a, b]$ is a simple example of a continuous distribution
+    \pause\item The Normal or Gaussian distribution is another common continuous distribution
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}{Task 5}
+  
+  $$P(\triangle ABC \text{ is obtuse triangle}) - ?$$ 
+
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}
+        % Draw circle of radius 2
+        \draw (0,0) circle (2cm);
+      
+        % Draw triangle
+        \draw (-1, 0) -- (1, 0) -- (-0.5, 1.2) -- cycle;
+      
+        % Label points
+        \draw (-1, 0) node[below] {$A$};
+        \draw ( 1, 0) node[below] {$B$};
+        \draw (-0.5, 1.2) node[left] {$C$};
+      
+        % Label center of circle and radius
+        \fill (0,0) circle (1.5pt);
+        \fill (-0.5, 1.2) circle (1.5pt);
+        \draw (-0.5, 0) node[below] {$1$};
+        \draw (0.5, 0) node[below] {$1$};
+      \end{tikzpicture}          
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \pause
+      \begin{tikzpicture}
+        % Draw circle of radius 2
+        \draw (0,0) circle (2cm);
+
+        % Draw circle of radius 1
+        \draw[dashed] (0,0) circle (1cm);
+
+        % Draw straight lines
+        \draw[dashed] (-1, -2) -- (-1, 2);
+        \draw[dashed] (1, -2) -- (1, 2);
+      
+        % Label points
+        % \draw (-1, 0) node[right] {$A$};
+        % \draw ( 1, 0) node[left] {$B$};
+
+        % Draw triangle
+        \draw (-1, 0) -- (1, 0) -- (-0.5, 0.6) -- cycle;
+
+        % Label center of circle and radius
+        \fill (0,0) circle (1.5pt);
+        \fill (-0.5, 0.6) circle (1.5pt);
+        \draw (-0.5, 0.6) node[above right] {$C$};
+      \end{tikzpicture}          
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{One slide about Pseudo-Random Processes}
+
+  \begin{definition}
+  A pseudo-random process is a process that appears to be random 
+  but is generated by a deterministic process.
+  \end{definition}
+
+  \begin{itemize}
+      \pause\item Pseudo-random sequences are not truly random because 
+      they are generated using deterministic methods (computer memory is always limited)
+      \pause\item They are often used in computer simulations and cryptography 
+      due to their predictability, repeatability, and efficiency
+  \end{itemize}
+
+  \pause
+  \begin{example}
+  \small
+  Consider a linear congruential generator (LCG), a type of pseudo-random number generator, defined by the recurrence relation:
+  \[
+  X_{n+1} = (aX_n + c) \mod m
+  \]
+  where $X$ is the sequence of pseudo-random values, and $a$, $c$, $m$ are constants. Despite the appearance of randomness in the sequence $X$, it is entirely determined by the choice of initial seed $X_0$.
+  \end{example}
+\end{frame}
+
+
+\begin{frame}{Fibonacci Generator}
+
+  \pause
+  \begin{definition}
+  A Fibonacci generator is a type of pseudo-random number generator that generates numbers using the Fibonacci sequence.
+  \end{definition}
+
+  \pause
+  \begin{itemize}
+      \item It uses the relation: $X_{n+2} = (X_{n+1} + X_{n}) \mod m$
+      \item It appears to generate random numbers, but the numbers are completely determined by the initial values $X_0$ and $X_1$.
+  \end{itemize}
+
+  \pause
+  \begin{example}
+    Suppose we start with $X_0 = 0$ and $X_1 = 1$ and choose $m = 10$. The generated sequence would be: 
+    0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9, 4, 3, 7, 0, 7, 7, 4, 1, 5, 6, 1, 7, 8, 
+    5, 3, 8, 1, 9, 0, 9, 9, 8, 7, 5, 2, 7, 9, 6, 5, 1, 6, 7, 3, 0, 3, 3, 6, 9, 
+    5, 4, 9, 3, 2, 5, 7, 2, 9, 1, 0, 1, 1, 2, 3, 5, 8, 3, 1, 4, 5, 9, 4, 3, 7, 
+    0, 7, 7, 4, 1, 5, 6, 1, 7, 8, 5, 3, 8, 1, 9, 0, ...
+  \end{example}
+\end{frame}
+
+\end{document}

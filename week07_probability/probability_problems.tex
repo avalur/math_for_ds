@@ -1,0 +1,75 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+\usepackage{xcolor}
+
+\begin{document}
+
+\section*{Homework 7 (10 points max)}
+
+\begin{enumerate}
+  \item (1 point) Vasily decided to impress Vasilisa and claims 
+  that if he rolls two dice, he will definitely get a six. 
+  Vasilisa, on the other hand, decided to give in to Vasily and 
+  will ignore all his rolls if the dices show the same numbers. 
+  Find the probability that Vasily will impress Vasilisa 
+  under these conditions.
+
+  \item (1 point) In a beautiful city "X", the population has grown 
+  to 10 people. On this occasion, an amusement park was opened, 
+  where you can jump on a trampoline. It turns out that the trampoline 
+  always breaks if there are 5 people on it, in case of $4$ people 
+  it breaks with a probability of $0.8$, in case of $3$ people with 
+  a probability of $0.6$, in case of $2$ people with a probability 
+  of $0.4$, in case of $1$ person with a probability of $0.2$, and 
+  the manufacturer guarantees that their reliable and quality 
+  trampolines do not break on their own. 
+  Despite the festive event, the inhabitants of the city "X" are very busy, 
+  each of them can come to the park with a probability of $0.5$. 
+  Find out what is the probability that the trampoline business 
+  will fail on the first day.
+  
+  \item (2 points) There are three balls in the bag: two black and 
+  one white. We perform the following actions: take out the ball, 
+  record its color and put back a ball of another color. 
+  Such actions are performed three times. Considering such 
+  an experiment as random, describe the probability space $(\Omega, P)$, 
+  that is, the space of elementary outcomes $\Omega$ and 
+  the probability measure $P: 2^{\Omega} \rightarrow [0, 1]$ on it. 
+  What is the probability of getting a white ball on the third step?
+  
+  \item (2 points) Given the set $X = \{1, 2, 3, 4\}$. We will choose 
+  a graph $G$ on vertices from $X$ with equal probability. 
+  Find the following probabilities
+  \begin{itemize}
+    \item[(a)] The probability that the graph is connected
+    \item[(b)] The probability that the graph is a tree
+    \item[(c)] The probability that the graph is a tree, 
+    given that it is connected
+    \item[(d)] The probability that the graph is connected, 
+    given that it is not a tree
+  \end{itemize}
+  
+  \item (2 points) Lucky Arkady came to the casino with two coins. 
+  Making a bet he wins with probability $p$ and loses with probability $q$. 
+  For winning or losing, he gains or respectively loses one coin. 
+  Arkady decided to go big and play until he completely loses his money. 
+  Find the probability that he will make at least 5 bets.
+  
+  \item (2 points) A disc with radius $r < \frac{1}{4}$ is thrown 
+  uniformly into a square with side $2$ in such a way that it falls 
+  entirely into the square. Describe the probability space and 
+  find the probability that the thrown disc will cross at least 
+  one diagonal of the square.
+\end{enumerate}
+
+\end{document}
