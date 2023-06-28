@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+\usepackage{xcolor}
+
+\begin{document}
+
+\section*{Homework 8 (10 points max)}
+
+\begin{enumerate}
+  \item (1 point) Let $\xi$ be a random variable such that 
+  $P(\xi = -1) = \frac{1}{4}$, $P(\xi = 2) = \frac{1}{4}$, 
+  and for any points $a, b \in [0, 1]$ with $a < b$, 
+  we have $P(\xi \in [a, b]) = \frac{b - a}{2}$.
+  Draw the plot of the distribution function $F_{\xi}(x) = P(\xi \leq x)$. 
+  Find the expected value and variance of $\xi$.
+
+  \item (1 point) In a lottery, $1\%$ of the tickets win \$200, $0.01\%$ 
+  of tickets win \$1000, and the remaining tickets do not win anything. 
+  Find the average winnings in this lottery (per ticket), 
+  i.e., the arithmetic mean of the winnings of all tickets. 
+  Think about how to formulate this in terms of random variables 
+  and expected value.
+
+  \item (2 points) There are $m$ objects arranged in a row, $k$ objects are 
+  randomly selected, $k < m$. The random variable $X$ equals the number 
+  of such objects $i$ that $i$ is selected, 
+  but all its neighbors are not. Find the expected value of $X$.
+
+  \item (2 points) In an equilateral triangle $ABC$ of area 1, we select a point $M$. 
+  Find the expected value of the area of $ABM$.
+
+  \item (2 points) Find the expected value and variance of the variable $\xi$ 
+  with density $p(x) = \frac{1}{2\alpha} e^{\frac{-|x-a|}{\alpha}}$.
+
+  \item Let $P_{\xi}(x) = P(\xi = x)$ and $F_{\xi}(x) = P(\xi \leq x)$.
+  \begin{enumerate}
+      \item (1 point) Show that for $a > 0$ and $-\infty < b < \infty$, 
+      $P_{a\xi+b}(x) = P_{\xi}(\frac{x-b}{a})$ and 
+      $F_{a\xi+b}(x) = F_{\xi}(\frac{x-b}{a})$
+      \item (1 point) Find the distribution function $F_{\xi^2}(y)$ 
+      (express it through $F_{\xi}$ and $P_{\xi}$)
+  \end{enumerate}
+\end{enumerate}
+\end{document}

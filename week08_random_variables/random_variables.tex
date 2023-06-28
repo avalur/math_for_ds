@@ -1,0 +1,731 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{0.5 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 8. Random variable}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{June 28, 2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+% \setbeamercolor{background canvas}{bg=gray}
+% \setbeamercolor{normal text}{fg=white}
+% \setbeamercolor{structure}{fg=mycyan}
+
+\begin{document}
+
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Recap and problems}
+  \begin{itemize}
+    \pause\item Still you can think of random variable as a variable whose possible values 
+    are some outcomes of a random phenomenon (some \textbf{black box}, answering your questions).
+    \pause\item We need to have pair $(\Omega, P)$, where $\Omega$ is all possible answers and $P$ is probability measure
+    \pause\item But you may not want to work with all the $\Omega$ 
+    \pause\item May be $\Omega$ is too informative, of complicated, or huge
+    \pause\item Instead we can ask \textbf{black box} for some specific characteristics as weight or temperature
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Definition of a Random Variable}
+  
+  A \textbf{random variable} is a function that assigns a real number to each outcome in the sample space of a random experiment. 
+  
+  Formally, if $\Omega$ is the sample space of a random experiment, 
+  a random variable $\xi$ is a function:
+  
+  \[
+    \xi : \Omega \rightarrow \mathbb{R}
+  \]
+  
+  In essence, a random variable provides a way to map the outcomes of a random process to numerical quantities.
+  
+\end{frame}
+
+
+\begin{frame}{Examples}
+
+  \begin{enumerate}
+    \item For rolling a die $\Omega = \{1, 2, 3, 4, 5, 6\}$ random variable 
+    $\xi(k) = k \mod 2$ shows us even results
+    \item For $k$ fair coins $\Omega = \{(a_1, \dots, a_k) \mid a_i \in \{0, 1\}\}$ we can count Heads:
+    $\xi((a_1, \dots, a_k)) = a_1 + \dots + a_k$
+  \end{enumerate}
+
+  \vspace{1cm}
+  So any random variable $\xi(\omega)$ is \textbf{new black box} with 
+  real numbers as samples and pair $(\mathbb{R}, P_\xi)$, where
+  $$ P_\xi(A) = P(\xi \in A) = P(\{\omega\mid \xi(\omega) \in A \}) = P(\xi \text{ shows value from } A)$$
+
+  $\xi^{-1}(A) = \{\omega\mid \xi(\omega) \in A \}$
+\end{frame}
+
+
+\begin{frame}
+  So we want to study different measures on $\mathbb{R}$.
+
+  \pause
+  \begin{block}{Question}
+    What probability measures can be on $\mathbb{R}$ at all?
+  \end{block}  
+
+  \pause Recall, that $P: 2^\mathbb{R} \to [0, 1]$ and 
+  for any event $A \mapsto P(A)$
+  \begin{itemize}
+    \pause\item $P(\emptyset) = 0,\ P(\mathbb{R}) = 1$
+    \pause\item $A_1, A_2, \ldots, A_n, \ldots \subseteq \mathbb{R},\  
+    A_i \cap A_j = \emptyset$
+    $$ P(\bigcup\limits_{i=1}^{\infty} A_i) = \sum\limits_{i=1}^{\infty} P(A_i) $$
+  \end{itemize}
+
+  \pause
+  {\small It can be proven mathematically, that sufficently to know 
+  only $P\left((a, b]\right)$ for all $a, b \in \mathbb{R}$
+  $\Rightarrow$ there is general procedure, 
+  which builds measure $P(A), A \subseteq \mathbb{R}$ 
+  (it is called construction of the outer Lebesgue measure, 
+  and of course here goes $\sigma$-algebras and so on)}
+\end{frame}
+
+
+\begin{frame}{Cumulative Distribution Function}
+  Actually we need to know only $P\left((-\infty, x]\right)$ as 
+  $$ P\left((a, b]\right) = P\left((-\infty, b]\right) - P\left((-\infty, a]\right) $$
+
+  \pause
+  \begin{block}{Definition}
+    Cumulative Distribution Function (CDF) of 
+    $\xi$ is $$F_\xi(x) = P_\xi\left((-\infty, x]\right) = P(\xi \leq x)$$
+  \end{block}  
+
+  \pause
+  Vice versa some $F: \mathbb{R} \to \mathbb{R}$ is distribution function iff
+  \begin{enumerate}
+    \pause\item $x \leq y \Rightarrow F(x) \leq F(y)$
+    \pause\item $\lim\limits_{x\to -\infty} F(x) = 0,\ \lim\limits_{x\to \infty} F(x) = 1$
+    \pause\item $\lim\limits_{t > 0, t \to 0} F(x+t) = F(x)$
+  \end{enumerate}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Examples}
+
+  \begin{enumerate}
+    \item Consider rolling a die: $\Omega = \{1, 2, 3, 4, 5, 6\}$, 
+    random variable $\xi(k) = k \mod 2$ shows us even results
+    \pause\item $\Omega = [0, 1],\ A \subseteq [0, 1],\ P(A) = \int\limits_{A}1dx = \text{length of A}$
+  \end{enumerate}
+
+  \centering
+  \pause
+  \begin{columns}
+    \begin{column}{0.3\textwidth}
+      \begin{tikzpicture}
+        \draw[->] (-1,0) -- (2,0) node[right] {$\xi$};
+        \draw[->] (0,-0.5) -- (0,2) node[above] {$F^1_\xi(x)$};
+        \foreach \x in {0,1} {
+            \draw (\x+0.08, -0.2) -- (\x+0.08, -0.2) node [left] {\x};
+        }
+          
+        % CDF
+        \draw[red] (-1,0) -- (0,0);
+        \draw[red] (0,0.5) -- (1,0.5);  
+        \draw[red] (1,1) -- (2,1);
+        \filldraw[red] (0,0.5) circle (1pt);
+        \filldraw[red] (1,1) circle (1pt);
+  
+        \draw[dashed] (0,1) -- (1,1) -- (1,0);
+      \end{tikzpicture}        
+    \end{column}
+    \begin{column}{0.3\textwidth}
+      \begin{tikzpicture}
+        \draw[->] (-1,0) -- (2,0) node[right] {$\xi$};
+        \draw[->] (0,-0.5) -- (0,2) node[above] {$F^2_\xi(x)$};
+        \foreach \x in {0,1} {
+            \draw (\x+0.08, -0.2) -- (\x+0.08, -0.2) node [left] {\x};
+        }
+          
+        % CDF
+        \draw[red] (-1,0) -- (0,0);
+        \draw[red] (0,0) -- (1,1);  
+        \draw[red] (1,1) -- (2,1);
+        % \filldraw[red] (0,0.5) circle (1pt);
+        % \filldraw[red] (1,1) circle (1pt);
+  
+        \draw[dashed] (0,1) -- (1,1) -- (1,0);
+      \end{tikzpicture}        
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Link between plots of $\xi(\omega)$ and $F_\xi(x)$}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}
+        \draw[<->] (-2,0) node[left] {$F_\xi(x)$} -- (2,0) node[right] {$\Omega$};
+        \draw[->] (0,-2.5) -- (0,2.5) node[above] {$\xi(\omega)$};
+        \draw[dashed] (-1,-2.5) -- (-1,2.5);
+    
+        \coordinate [label={0}] () at (-0.14, -0.45);
+        \coordinate [label={1}] () at (-1.14, -0.45);
+          
+        % Function \xi(x)
+        \draw[blue, thick, domain=-0.96:0.96, smooth] plot (\x+1, {50*((\x^3)/3 - (\x^2)/2 + 0.21*\x))});
+        % Function F_\xi(x)
+        \draw[red, thick, domain=0.12:0.88, smooth] plot (-\x, {ln(\x/(1-\x))});
+    
+        % \draw[dashed] (0,1) -- (1,1) -- (1,0);
+      \end{tikzpicture}                  
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \pause
+      So the vertical $\xi(\omega)$-axis is x-axis for CDF $F_\xi(x)$
+
+      \pause\vspace{0.5cm}
+      Moreover, different random variables $\xi$ may correspond to one and the same CDF. 
+      For instance, you could reverse the $\Omega$-axis.
+    \end{column}    
+  \end{columns}
+
+  \pause
+  \begin{block}{Question}
+    How to find CDF break points on this plot?
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Probability atoms}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}[scale=1.0]
+        % axes
+        \draw[->] (-1,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-0.5) -- (0,3) node[above] {$F_\xi(x)$};
+        
+        % ticks
+        \foreach \x in {1,2,3} {
+            \draw (\x, 0.1) -- (\x, -0.1) node [below] {\x};
+        }
+        \draw (-0.1, 2) -- (0.1, 2) node [right] {1};
+        \coordinate [label={0}] () at (-0.14, -0.43);
+
+        \draw (2.6, 0.1) -- (2.6, -0.1) node [below] {$c$};
+        \draw[dashed] (2.6, 0) -- (2.6, 1.1);
+
+        % Function F_\xi(x)
+        \draw[red, thick, domain=-1:1, smooth] plot (\x, {exp(\x/15)-0.8});
+    
+        % \draw[thick, red] (-0.5,0) -- (1,0);
+        
+        \draw[thick, red] (1,0.6) -- (2,0.6) -- (3,1.4);
+        \draw[thick, red] (3,2) -- (4,2);
+        
+        % points
+        \draw[red, fill=white] (1,{exp(1/15)-0.8}) circle (1.5pt);
+        \draw[red, fill=white] (3,1.4) circle (1.5pt);
+        
+        \draw[red, fill=red] (1,0.6) circle (1.5pt);
+        \draw[red, fill=red] (3,2) circle (1.5pt);
+      \end{tikzpicture}    
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      \pause
+      $P(\{c\}) = ?,\ P(1) = ?$
+      
+      \pause
+      \begin{align*}
+        P(\{c\}) = \lim\limits_{\delta \to 0} P\left((c-\delta, c+\delta]\right) = \\
+        = \lim\limits_{\delta \to 0} \left(F(c+\delta) - F(c-\delta)\right) = 0
+      \end{align*}
+      
+      \pause
+      $P(1) = F(1) - F(1-) = \text{size of the jump discontinuity}$
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Classification of measures}
+
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+    \textbf{Mathematics} & \textbf{Engineers} \\
+    \hline
+    Discrete &  Discrete \\
+    Continuous &  -- \\
+    Absolutely Continuous &  Continuous \\
+    \hline
+  \end{tabular}
+
+  \pause\vspace{1cm}
+  We are using the engineers terminology.
+  
+  \begin{enumerate}
+    \pause\item Discrete consists of atoms $a_i$ only: $\sum\limits_{i=1}^\infty p_i = 1$
+    \pause\item Continuous is defined by its density function $p(x) > 0$:
+    $$\int\limits_{\mathbb{R}} p(x)dx = 1,\quad F^\prime(x) = p(x),\quad F(x) = \int\limits_{-\infty}^x p(t)dt$$
+  \end{enumerate}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Cantor Function}
+  
+  The \textit{Cantor function}, also known as the \textit{Devil's Staircase}, 
+  is a peculiar function that was discovered by Georg Cantor. 
+  
+  \begin{itemize}
+      \pause\item It is defined on the interval $[0, 1]$
+      \pause\item It is constant on the set of numbers that are not in the Cantor set, 
+      which has Lebesgue measure zero
+      \pause\item It is increasing: if $0 \leq x < y \leq 1$, then $f(x) \leq f(y)$
+      \pause\item \textbf{It is continuous, but not absolutely continuous}
+  \end{itemize}
+  
+  Mathematically, it can be defined as:
+  
+  \[ f(x) = \frac{1}{2} \sum_{n=0}^{\infty} \frac{2}{3^n} \chi_{C_n}(x) \]
+  
+  where $C_n$ is the $n$-th stage in the construction of the Cantor set, 
+  and $\chi$ is the characteristic function.  
+\end{frame}
+
+
+\begin{frame}
+  \centering
+  \includegraphics[scale=0.2]{CantorEscalier-2.png}
+
+  {\footnotesize Source: Wikipedia, the free encyclopedia}
+\end{frame}
+
+
+\begin{frame}{Histogramm or how to understand density}
+  
+  A \textit{histogram} is a graphical representation of the distribution of a dataset. 
+
+  \begin{itemize}
+      \pause\item It is an estimate of the probability distribution of a 
+      continuous variable
+      \pause\item To construct a histogram, the first step is to "bin" 
+      the range of values — that is, divide the entire range of values into 
+      a series of intervals
+      \pause\item Then count how many values fall into each interval
+  \end{itemize}
+      
+\end{frame}
+
+
+\begin{frame}
+  An example of a histogram:
+  
+  \begin{center}
+  \begin{tikzpicture}
+  \begin{axis}[
+      ybar,
+      enlargelimits=0.15,
+      legend style={at={(0.5,-0.15)},
+        anchor=north,legend columns=-1},
+      ylabel={\# of occurrences},
+      symbolic x coords={bin1,bin2,bin3,bin4,bin5},
+      xtick=data,
+      nodes near coords,
+      nodes near coords align={vertical},
+      ]
+  \addplot coordinates {(bin1,2) (bin2,15)
+  (bin3,13) (bin4,7) (bin5,5)};
+  \end{axis}
+  \end{tikzpicture}
+  \end{center}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Mathematical Expectation}
+
+  We like numbers more than ``strange'' random variables.
+  
+  \pause
+  \begin{definition}
+  For a discrete random variable $\xi$ with probability mass function $p(x)$, 
+  the mathematical expectation $E\xi$ is defined as:
+  \[
+  E\xi = \sum_{x} x \cdot p(x)
+  \]
+  For a continuous random variable $\xi$ with probability density function $p(x)$, 
+  the mathematical expectation $E\xi$ is defined as:
+  \[
+  E\xi = \int_{-\infty}^{\infty} x \cdot p(x) \, dx = 
+  \int_{\mathbb{R}} x d P_\xi = \int_{\Omega} \xi d P
+  \]
+  \end{definition}
+  
+  \pause
+  {\small The mathematical expectation can be thought of 
+  as the ``average'' or ``mean'' value of the random variable.}
+  
+\end{frame}
+
+
+\begin{frame}{First example}
+    $\Omega = \left\{(a_1, \dots, a_n)\mid a_i \in \{0,1\} \right\}, \quad P\left((a_1, \dots, a_n)\right) = \frac{1}{2^n}$
+    $$\quad\quad \xi(a_1, \dots, a_n) = a_1 + \dots + a_n$$
+
+  \pause
+  \begin{center}
+    \begin{tikzpicture}[scale=0.8]
+    \begin{axis}[
+        ybar,
+        enlargelimits=0.15,
+        legend style={at={(0.5,-0.15)},
+          anchor=north,legend columns=-1},
+        ylabel={\# of heads},
+        symbolic x coords={$\omega_1$,$\omega_2$,$\dots$,$\omega_{2^n-1}$,$\omega_{2^n}$},
+        xtick=data,
+        nodes near coords,
+        nodes near coords align={vertical},
+        ]
+    \addplot coordinates {($\omega_1$,2) ($\omega_2$,10)
+    ($\dots$,0) ($\omega_{2^n-1}$,7) ($\omega_{2^n}$,5)};
+    \end{axis}
+    \end{tikzpicture}
+    \end{center}
+\end{frame}
+
+
+\begin{frame}{Second example}
+  $\Omega$ is unit square, $P(A)$ is area of $A$
+
+  $$\xi(x,y) = |x-y|$$
+
+  \pause $E \xi = ?$
+\end{frame}
+
+
+\begin{frame}{Plot of $\xi(x, y) = |x-y|$}
+  \centering
+  \begin{tikzpicture}
+    \begin{axis}[
+        title={},
+        xlabel={$x$},
+        ylabel={$y$},
+        zlabel={$\xi(x, y)$},
+        zlabel style={rotate=0},
+        view={115}{30},
+        grid=major]
+    \addplot3 [
+        surf,
+        shader=interp,
+        domain=-2:2,
+        domain y=-2:2,
+    ] {abs(x-y)};
+    \end{axis}
+    \end{tikzpicture}
+    \pause
+    $$E \xi = \int\limits_{\square} |x-y|\,dx\,dy$$
+\end{frame}
+
+
+\begin{frame}{Three Situations for Calculating Expectation}
+  $$E\xi = \int\limits_{\mathbb{R}} x d P_\xi$$
+
+  We need to know $P_\xi$
+    
+  \pause
+  If $F_\xi(x)$ is CDF: 
+  $$E\xi = \int\limits_{\mathbb{R}} x d F_\xi(x) = 
+    \sum\limits_{i=1}^\infty a_ip_i + \int\limits_{\mathbb{R}} x F^\prime_\xi(x) dx,$$
+    where $p_i = F_\xi(a_i) - F_\xi(a_i-)$ for the jumps discontinuity $a_i$
+  
+  \begin{itemize}
+    \pause\item If $\xi$ is discrete then $E\xi = \sum\limits_{i=1}^\infty a_ip_i$
+    \pause\item If $\xi$ is continuous then $E\xi = \int\limits_{\mathbb{R}} x p(x) dx$
+    \pause\item $Ef(\xi) = \sum\limits_{i=1}^\infty f(a_i)p_i + 
+    \int\limits_{\mathbb{R}} f(x) F^\prime_\xi(x) dx$
+  \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Expectation Properties}
+ 
+    Let $\xi$ and $\eta$ be random variables, and $a$ and $b$ be constants, then the following properties hold:
+    
+    \begin{enumerate}
+      \item $E[a] = a$, where $a$ is a constant
+      \item \textbf{Linearity of Expectation:} $E[a\xi + b\eta] = aE[\xi] + bE[\eta]$
+      \pause\item $E[\xi - E\xi] = 0$
+      \pause\item If $\xi \geq 0$ a.s. then $E[\xi] \geq 0$
+      \item If $\xi \leq \eta$ a.s. then $E[\xi] \leq E[\eta]$
+      \item (Jensen's inequality) 
+      
+      If $\varphi$ is a convex function, then $E[\varphi(\xi)] \geq \varphi(E[\xi])$
+      \pause\item (in the future) If $\xi$ and $\eta$ are independent, 
+      then $$E[\xi\eta] = E[\xi]E[\eta]$$
+    \end{enumerate}
+    
+\end{frame}
+
+
+\begin{frame}{Task 1}
+  $\Omega = \left\{(a_1, \dots, a_n)\mid a_i \in \{0,1\} \right\}, \quad P\left((a_1, \dots, a_n)\right) = \frac{1}{2^n}$
+  $$\quad\quad \xi(a_1, \dots, a_n) = \#(\text{ of occurrences of 01})$$
+  $E\xi = ?$
+
+  \pause
+  Of course we can calculate 
+  $E\xi = \sum\limits_{k=0}^{n-1} k\cdot P(\text{k occurrences})$, but it's hard.
+
+  \pause
+  Better to invent new random variables: 
+  $$\xi_{ij}(a_1, \dots, a_n) = 
+  \begin{cases}
+    1,\quad a_ia_j = 01 \\
+    0,\quad \text{otherwise}
+  \end{cases}$$
+
+  So $E\xi = \pause E \sum\limits_{i} \xi_{ii+1} = \sum\limits_{i} E \xi_{ii+1} = 
+  \pause \sum\limits_{i} P(\xi_{ii+1}=1) = \pause\sum\limits_{i} \frac14 = \pause\frac{n-1}{4}$
+
+  % the same scheme works for counting expectation 
+  % of the isolated top number for some random graph
+\end{frame}
+
+
+\begin{frame}{Task 2}
+  $\Omega = S_n$, choose a random permutation uniformly
+
+  Number is stable, if $k = \sigma(k)$. Random variable $\xi: \Omega \to \mathbb{R}$, find $E\xi$:
+  $$\xi(\sigma) = \#(\text{stable numbers}) $$
+
+  \pause
+  \begin{block}{Solution}
+    Again consider new random variables:
+    $$\xi_{k}(\sigma) = 
+    \begin{cases}
+      1,\quad \text{if } \sigma(k) = k \\
+      0,\quad \text{otherwise}
+    \end{cases}$$
+    
+    \pause
+    Then $$E\xi = E\xi_1 + \dots + E\xi_n = \sum P(\xi_k = 1) = n\cdot \frac{(n-1)!}{n!} = 1$$
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{How far the answers are scattered from expectation?}
+  The variance of a random variable $\xi$ is a measure of its dispersion. It is denoted as $Var(\xi)$ or $\sigma^2$ and it is defined as:
+  
+  \begin{equation*}
+  Var(\xi) = E[(\xi - E\xi)^2]
+  \end{equation*}
+  
+  Alternatively, it can be computed using the formula:
+  
+  \begin{equation*}
+  Var(\xi) = E[\xi^2] - (E\xi)^2
+  \end{equation*}
+  
+  The standard deviation of a random variable is the square root of its variance and it is denoted by $\sigma$.
+
+  \pause
+  \begin{center}
+    \begin{tikzpicture}[scale=1.0]
+      % axes
+      \draw[->] (-1,0) -- (5,0) node[below right] {$\mathbb{R}$};
+      
+      % points
+      \coordinate (A) at (0,0);
+      \coordinate (B) at (2,0);
+      \coordinate (C) at (4,0);
+
+      % ticks
+      \draw (0, 0.1) -- (0, -0.1);
+      \draw (2, 0.1) -- (2, -0.1) node [below] {$E\xi$};
+      \draw (4, 0.1) -- (4, -0.1);
+
+      \coordinate [label={$-\sigma(\xi)$}] () at (1, 0.2);
+      \coordinate [label={$+\sigma(\xi)$}] () at (3, 0.2);
+  
+      \draw[dashed] (A) to[out=30,in=150] (B);
+      \draw[dashed] (B) to[out=30,in=150] (C);
+    \end{tikzpicture}      
+  \end{center}
+
+  $Var(a\xi + b) = a^2 Var(\xi)$ -- it can be proven by definition
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Gaussian Distribution}
+  
+  The Gaussian distribution, also known as the normal distribution, is a continuous probability distribution for a real-valued random variable. Its probability density function is given by:
+  
+  \begin{equation*}
+  f(x) = \frac{1}{\sqrt{2\pi}\sigma}e^{-\frac{(x-\mu)^2}{2\sigma^2}}
+  \end{equation*}
+  
+  where:
+  \begin{itemize}
+  \pause\item $\mu$ is the mean or expectation of the distribution (and also its median and mode)
+  \pause\item $\sigma$ is the standard deviation
+  \pause\item $\sigma^2$ is the variance
+  \end{itemize}
+
+  \pause
+  The standard Gaussian distribution has a mean of 0 and a standard deviation of 1.
+  It is denoted as $\xi \sim N(\mu, \sigma^2)$
+  
+\end{frame}
+  
+
+\begin{frame}
+  \frametitle{Gaussian Distribution Plot}
+  
+  \begin{center}
+  \begin{tikzpicture}
+  \begin{axis}[
+      no markers, 
+      domain=-3:3, 
+      samples=100,
+      axis lines*=left, 
+      xlabel=$x$,
+      ylabel=$f(x)$,
+      height=5cm, 
+      width=12cm,
+      xtick={-3, -2, -1, 0, 1, 2, 3}, 
+      ytick=\empty, 
+      enlargelimits=false, 
+      clip=false, 
+      axis on top,
+      grid = major,
+      axis lines = middle
+    ]
+    \addplot [fill=cyan!20, draw=none, domain=-3:3] {1/(sqrt(2*pi))*exp(-x^2/2)} \closedcycle;
+    \addplot [very thick,cyan!50!black] {1/(sqrt(2*pi))*exp(-x^2/2)};
+  \end{axis}
+  \end{tikzpicture}
+  \end{center}
+  
+  where $\xi \sim N(\mu=0, \sigma^2=1)$ and:
+  \begin{itemize}
+  \item $x$ is a normal random variable
+  \item $f(x)$ is the probability density function
+  \end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{What if we have several random variables?}
+  $(\Omega, P)$ and $\xi_1, \xi_2, \dots, \xi_k$
+
+  \begin{block}{Question}
+    How can we describe all the values?
+  \end{block}
+
+  \pause
+  \vspace{0.5cm}
+  $\vec{\xi}: \Omega \to \mathbb{R}^k, \quad \omega \mapsto (\xi_1(\omega), \xi_2(\omega), \dots, \xi_k(\omega))$
+
+  So we have pair $(\mathbb{R}^k, P_{\vec{\xi}})$ and 
+  $P_{\vec{\xi}}(A) = P\left(\left\{\omega \mid \vec{\xi}(\omega) \in A \right\}\right)$ — probability distribution of random vector
+
+  \pause
+  \vspace{0.5cm}
+  How to define probability $P$ in $\mathbb{R}^k$? Again we need ``good'' sets, 
+  and for instance in $\mathbb{R}^2$ it is $\left\{(x,y)\mid x \leq a, y \leq b\right\}$.
+  So we need CDF as 
+  $$F(x_1, \dots, x_k) = P\left((-\infty, x_1]\times\dots\times(-\infty, x_k]\right)$$
+
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Task 3}
+  Given $F$ in $\mathbb{R}^2$ compute $P\left((a, b]\times(c, d]\right)$.
+
+  \centering
+  \begin{tikzpicture}
+    \draw[->] (-2,0) -- (1.5,0);
+    \draw[->] (0,-2) -- (0,1.5);
+      
+    \coordinate (ac) at (-1, -1);
+    \coordinate (ad) at (-1, 1);
+    \coordinate (bc) at (1, -1);
+    \coordinate (bd) at (1, 1);
+    \filldraw[red] (ac) circle (1pt);
+    \filldraw[red] (ad) circle (1pt);
+    \filldraw[red] (bc) circle (1pt);
+    \filldraw[red] (bd) circle (1pt);
+    \coordinate [label={$a$}] () at (-1.17, -0.45);
+    \coordinate [label={$b$}] () at (0.83, -0.45);
+    \coordinate [label={$c$}] () at (0.15, -1.08);
+    \coordinate [label={$d$}] () at (0.15, 0.92);
+
+    \draw (bd) -- (ad) -- (-2,1);
+    \draw (bd) -- (bc) -- (1,-2);
+    \draw[dashed] (ad) -- (ac) -- (-1,-2);
+    \draw[dashed] (bc) -- (ac) -- (-2,-1);
+  \end{tikzpicture}        
+
+  \begin{enumerate}
+    \pause\item As in 1D we use limit to define the probability of rectangle
+    \pause\item There is discrete and continuous random variables
+    \pause\item $P_{\vec{\xi}}(A) = \int\limits_{A} p(x_1, \dots, x_n) dx_1\,\dots\,dx_n$
+  \end{enumerate}
+\end{frame}
+
+\end{document}
