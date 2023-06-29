@@ -1,0 +1,250 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{0.5 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 9. Independence of random variables}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{Bonus-2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+\setbeamercolor{background canvas}{bg=gray}
+\setbeamercolor{normal text}{fg=white}
+\setbeamercolor{structure}{fg=cyan}
+
+\begin{document}
+
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Independence of Random Variables}
+  When people say that ``We have conducted $N$ independent experiments'', 
+  then mathematically this means that we have $N$ independent random variables.
+
+  \pause
+  \begin{definition}
+    Two random variables $\xi$ and $\eta$ are \emph{independent} ($\xi \indep \eta$) if 
+    the occurrence of $\xi$ does not affect the occurrence of $\eta$, 
+    and vice versa.
+  \end{definition}
+  
+  \centering
+  \begin{tabular}{|c|c|}
+    \hline
+      Any event in $\xi$ & Any event in $\eta$ \\
+      \hline
+      $\forall A \subseteq \mathbb{R} \left\{\omega\mid \xi(\omega) \in A\right\}$ &
+      $\forall B \subseteq \mathbb{R} \left\{\omega\mid \eta(\omega) \in B\right\}$ \\
+      \hline\hline
+      \multicolumn{2}{|c|}{  
+        $\forall A, B \subseteq \mathbb{R} \quad 
+        P(\xi \in A, \eta \in B) = P(\xi \in A) P(\eta \in B)$
+      } \\
+      \hline
+  \end{tabular}
+\end{frame}
+
+
+\begin{frame}
+  \begin{block}{So, formally,}
+    $\xi$ and $\eta$ are independent if and only if for every $x$ and $y$, 
+    \[P(\xi \leq x, \eta \leq y) = P(\xi \leq x) \cdot P(\eta \leq y)\]
+  \end{block}
+    
+  \begin{itemize}
+    \pause\item Independent random variables have important properties 
+    that often simplify the analysis of probability models
+    \pause\item For instance, the expected value of the product of 
+    two independent random variables is the product of their expected values
+  \end{itemize}
+
+  \pause
+  \begin{block}{Indicator function}
+    We can enclose events to the random variables consistenly with the independence property like that:
+    \begin{align*}
+      \text{Events } 2^\Omega &\to \mathbb{R}^\Omega \text{ random variables} \\
+      A &\mapsto \chi_A \\
+      P(A) &\mapsto E \chi_A = P(A)
+    \end{align*}
+  \end{block}
+\end{frame}
+
+
+\begin{frame}
+  $\xi, \eta: \Omega \to \mathbb{R}$ and $\xi \indep \eta$
+
+  $F_{\xi, \eta} = P(\xi \leq x, \eta \leq y) = 
+  P(\xi \leq x)\cdot P(\eta \leq y) = F_{\xi}(x)\cdot F_{\eta}(y)$
+
+  \begin{block}{Examples for two random variables}
+    \begin{enumerate}
+      \pause\item For two discrete random variables \textbf{the only way} of getting independence is:
+      
+      \begin{columns}
+        \begin{column}{0.4\textwidth}
+          \begin{tikzpicture}[scale=0.5]
+            \draw[step=1cm,white,very thin, dashed] (-0.2,-0.2) grid (5.2,5.2);
+            
+            \foreach \x in {1,...,4} {
+                \foreach \y in {1,...,4} {
+                    \fill (\x,\y) circle (2pt);
+                }
+            }
+            
+            \draw[thick,->] (-0.2,0) -- (5.5,0) node[right] {$\xi$};
+            \draw[thick,->] (0,-0.2) -- (0,5.5) node[above] {$\eta$};
+        \end{tikzpicture}              
+        \end{column}
+        \begin{column}{0.4\textwidth}
+          $\left[ \xi_i \eta_j \right] = 
+          \begin{bmatrix}
+             & & \\
+             & p_iq_j& \\
+             & & 
+          \end{bmatrix} = \begin{bmatrix}
+            p_1 \\
+            p_2 \\
+            p_3 \\
+            p_4           
+          \end{bmatrix} \begin{bmatrix}
+            q_1 & q_2 & q_3 & q_4
+          \end{bmatrix}$
+        \end{column}
+      \end{columns}
+      \pause\item For continuous random variables:
+
+      $$p(x, y) = \frac{d}{dx} \frac{d}{dy} F(x,y) \quad \Rightarrow \quad 
+      p_{\xi, \eta} = p_{\xi}(x)\cdot p_{\eta}(y)$$
+    \end{enumerate}  
+  \end{block}
+\end{frame}
+
+
+\begin{frame}{Expectation of independent variables}
+
+  $A, B \subseteq \Omega$
+  
+  $$\chi_A\cdot\chi_B = \chi_{A\cap B}, P(A\cap B) = P(A)\cdot P(B) \Rightarrow 
+   E[\chi_A\cdot\chi_B] = E[\chi_{A}] \cdot E[\chi_{B}]
+  $$
+
+  But after all, characteristic functions are step-functions, 
+  so with their help, by passing to the limit, 
+  you can simply express the expectation values of the random variables $\xi \indep \eta$:
+
+  $$ \boxed{E[\xi\eta] = E[\xi]E[\eta]} $$
+
+  And then it can be proven:
+  $$ {Var[\xi + \eta] = Var[\xi] + Var[\eta]} $$
+
+  The same is true for $n$ independent random variables $\xi_1, \dots, \xi_n$.
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Expectation of random vector}
+  Let random vector $\vec{\xi}:\Omega \to \mathbb{R}^n$
+
+  \begin{definition}
+    $$E\vec{\xi} = \int\limits_{\Omega} \vec{\xi} dP = (E\xi_1, \dots, E\xi_n)^T$$
+  \end{definition}
+
+  In 1D we have variance of random variable, which describes its dispersion.
+
+  For the same purpose in $n$-dimensional space we have to consider quadratic form, 
+  i.e. one number is not enough.
+
+\end{frame}
+
+\begin{frame}
+  \frametitle{Covariance and correlation}
+  
+  {\small Covariance is a measure of the joint variability of 
+  two random variables. If the greater values of one variable mainly 
+  correspond with the greater values of the other variable, 
+  and the same holds for the lesser values, the covariance is positive.}
+  
+  \[\text{Cov}(\xi, \eta) = E[(\xi - E[\xi])(\eta - E[\eta])] = E[\xi\eta] - E[\xi]E[\eta]\]
+  
+  Let's consider the inner product:
+  $$\left< \xi, \eta \right> = E[\xi\eta]$$
+  And if $\xi_0 = \xi - E[\xi],\ \eta_0 = \eta - E[\eta]$, then
+  $$\text{Cov}(\xi, \eta) = \left<\xi_0, \eta_0 \right> = |\xi_0||\eta_0|\cos \alpha$$
+  $$\text{Corr}(\xi, \eta) = \cos \alpha = 
+  \frac{\text{Cov}(\xi, \eta)}{\sqrt{\text{Var}(\xi)}\sqrt{\text{Var}(\eta)}}$$
+\end{frame}
+
+\begin{frame}
+  \frametitle{Properties of Covariance}
+  \begin{itemize}
+    \item Covariance is a measure of linear relationship between two variables
+    \item Its sign indicates the direction of the linear relationship between variables
+    \item Covariance is commutative: $\text{Cov}(X, Y) = \text{Cov}(Y, X)$
+    \item Covariance is distributive over addition: $\text{Cov}(X, Y+Z) = \text{Cov}(X, Y) + \text{Cov}(X, Z)$
+    \item Covariance with self is variance: $\text{Cov}(X, X) = \text{Var}(X)$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Covariance matrix}
+  Let random vector $\vec{\xi}:\Omega \to \mathbb{R}^n$
+
+  \begin{definition}
+    $$\Sigma_{ij} = \text{Cov}(\xi_i, \xi_j)$$
+  \end{definition}
+
+  For 1D case approximation of possible values interval is $$-1 \leq \frac{\xi}{\sigma(\xi)}\leq 1$$
+
+  For general case similar approximation is
+  $$ Q(x) = x^T \Sigma^{-1} x \leq 1$$
+
+  Moreover, square roots of $\Sigma$-eigenvalues are coefficients axes stretch factors.
+
+\end{frame}
+
+\end{document}

@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,shapes.geometric,calc,snakes,backgrounds,arrows.meta}
+\usepackage{xcolor}
+
+\begin{document}
+
+\section*{Problems (10 points max)}
+
+\begin{enumerate}
+  \item Two trains arrive at a station at random times. Their arrival times are independent and have an exponential distribution with density $e^{-x} \cdot \theta(x)$. A student arrives at the station at time 2. 
+  
+  Find 
+  \begin{itemize}
+      \item[(a)] (1 point) the probability that he will be able to leave on at least one train
+      \item[(b)] (1 point) the expected waiting time for the next train 
+      (assuming that the waiting time is zero if the student is late 
+      for both trains)
+  \end{itemize}
+  Here, 
+  $$\theta(x) = \begin{cases} 1, & \text{if } x \geq 0 \\ 0, & \text{if } x < 0 \end{cases}$$
+
+  \item (2 points) On the plane, 4 points A = (1, 0), B = (0, 1), C = (-1, 0) and D = (0, -1) are marked. 
+  Let the random vector $(\xi, \eta)$ be uniformly distributed inside the rhombus ABCD. 
+  Find the distribution of $\xi$ and $\eta$. 
+  Will $\xi$ and $\eta$ be independent?
+
+  \item (2 points) Let $(\xi, \eta)$ be a normal vector with an expected value of 
+  $0 \in \mathbb{R}^2$ and covariance matrix $\Sigma = \begin{pmatrix} 1 & 1 \\ 1 & 2 \end{pmatrix}$. 
+  Find the densities for its coordinates $\xi$ and $\eta$. 
+  Use the fact that $\int\limits_{-\infty}^{\infty} e^{-x^2/2} dx = \sqrt{2\pi}$ in this problem.
+
+  \item (2 points) Let $\xi_1, \ldots, \xi_n$ be independent identically distributed 
+  continuous random variables with density $p(x)$. 
+  Find the density of random variables: $\max(\xi_1, \ldots, \xi_n)$ and 
+  $\min(\xi_1, \ldots, \xi_n)$.
+
+  \item Let $\xi$ and $\eta$ be two random variables. Prove that
+  \begin{itemize}
+      \item[(a)] (1 point) $\xi$ and $\eta$ are independent if and only if $a\xi + b$ and $\eta$ are independent. Here $a, b \in \mathbb{R}$ with $a \neq 0$
+      \item[(b)] (1 point) If each of the random variables $\xi$ and $\eta$ takes only two values, then they are independent if and only if $\text{cov}(\xi, \eta) = 0$
+  \end{itemize}
+\end{enumerate}
+\end{document}
