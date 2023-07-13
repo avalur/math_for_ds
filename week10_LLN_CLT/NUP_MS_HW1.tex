@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\begin{document}
+
+\section*{Mathematical Statistics. Homework 1 (10 points max)}
+\begin{enumerate}
+    \item (4 points) Many "named" distributions are special cases of the more distributions. \textbf{For each of the following distributions derive the form of the pdf, verify it is a pdf (0.2 points), and calculate the mean (0.4 points) and variance (0.4 points)}.
+
+    \begin{enumerate}
+        \item (1 point) If $X \sim \exp(\beta)$, then $Y = X^{1 / \gamma}$ has the Weibull$(\gamma, \beta)$ distribution, where $\gamma > 0$ is a constant
+        \item (1 point) If $X \sim \text{gamma}(a, b)$, then $Y = (1/X)$ has the Inverted Gamma IG$(a, b)$ distribution. 
+        \item (1 point) If $X \sim \text{gamma}(3/2, \beta)$, then $Y = (X/\beta)^{1/2}$ has the Maxwell distribution.
+        \item (1 point) If $X \sim \exp(1)$, then $Y = \alpha - \gamma \log X$ has the Gumbel$(\alpha, \gamma)$ distribution, where $-\infty <\alpha < \infty$ and $\gamma > 0$.
+    \end{enumerate}
+  \item (5 points) Derive the Stirling's Formula from CLT. For that 
+  \begin{enumerate}
+  \item (1 point) Prove that 
+  \begin{equation*}
+      P\left(\frac{\bar{X}_n - 1}{1 / \sqrt{n}} \leq x\right) \to P(Z \leq x),
+  \end{equation*}
+  where $Z$ is a standard normal random variable and $X_i \sim \exp(1)$ for $i = 1, 2,\dots$.
+  \item (4 points) Differentiate both sides of the approximation in part (a). \textit{HINT: $\sum\limits_{i=1}^n X_i = \text{gamma}(n, 1)$}
+  \item Substitute $x = 0$.
+  \end{enumerate}
+  
+  \item (1 point) What is the probability that the larger of two continuous iid random variables will exceed the population median $m$ (Or it can be formulated like $P(\max(X_1, X_2) > m)$)? Generalize result to samples of size $n$.
+
+\end{enumerate}
+\end{document}
