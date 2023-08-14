@@ -1,0 +1,102 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\begin{document}
+
+\section*{Probability and Statistics (12 points max), August 8, 2023 — var 1}
+The final score for the exam will be calculated by the formula
+$$ \text{Final score} = \min(100,\ \text{sum(points) * 10})$$
+
+\begin{enumerate}
+  \item (2 points) Explore the system and find the general solution depending on the value of the parameter $\lambda$:
+  \begin{align*}
+    \begin{cases}
+      (1 - \lambda)x_1 + x_2 + x_3 = \lambda \\
+      x_1 + (1 - \lambda)x_2 + x_3 = 2\lambda \\
+      x_1 + x_2 + (1 - \lambda)x_3 = 3\lambda
+    \end{cases}
+  \end{align*}
+
+  \item (2 points) Calculate the characteristic polynomial of the ``N-matrix'':
+  \[
+    \begin{pmatrix}
+      a & 1 & \cdots & 1 & a \\
+      a & a & \cdots & 1 & a \\
+      \vdots &  & \ddots & \vdots & \vdots \\
+      a & 1 & \cdots & a & a \\
+      a & 1 & \cdots & 1 & a
+      \end{pmatrix}  \]
+    
+  \item (2 points) Prove, that for any projector matrix (it is also called idempotent) $P$, i.e. $P^2 = P$:
+   $$ \operatorname{tr} (P) = \operatorname{rank} (P)$$
+
+  \item (2 points) Prove, that for odd $n$ there is no $n \times n$ real invertible 
+  matrices $A$ and $B$ that satisfy $AB - BA = B^2A$.
+     
+  \item (2 points) There are a lot of black and white balls and 
+  two of them in the bag: one black and one white. 
+  We perform the following actions: take out the ball, 
+  record its color and put back two balls of the same color. 
+  Such actions are performed three times. Considering such 
+  an experiment as random, describe the probability space $(\Omega, P)$, 
+  that is, the space of elementary outcomes $\Omega$ and 
+  the probability measure $P: 2^{\Omega} \rightarrow [0, 1]$ on it. 
+  What is the probability of getting a white ball on the third step?
+
+  \item (2 points) In a square $ABCD$ of area 1, we select a point $M$. 
+  Find the expected value of the area of triangle $BCM$.
+\end{enumerate}
+
+\newpage
+\section*{Probability and Statistics (12 points max), August 8, 2023 — var 2}
+The final score for the exam will be calculated by the formula
+$$ \text{Final score} = \min(100,\ \text{sum(points) * 10})$$
+
+\begin{enumerate}
+  \item (2 points) Explore the system and find the general solution depending on the value of the parameter $\lambda$:
+  \begin{align*}
+    \begin{cases}
+      (1 - \lambda)x_1 + x_2 + x_3 = 3\lambda \\
+      x_1 + (1 - \lambda)x_2 + x_3 = 2\lambda \\
+      x_1 + x_2 + (1 - \lambda)x_3 = \lambda
+    \end{cases}
+  \end{align*}
+
+  \item (2 points) Calculate the characteristic polynomial of the ``N-matrix'':
+  \[
+    \begin{pmatrix}
+      a & 1 & \cdots & 1 & a \\
+      a & a & \cdots & 1 & a \\
+      \vdots &  & \ddots & \vdots & \vdots \\
+      a & 1 & \cdots & a & a \\
+      a & 1 & \cdots & 1 & a
+      \end{pmatrix}  \]  
+
+  \item (2 points) Prove, that for any projector matrix (it is also called idempotent) $P$, i.e. $P^2 = P$:
+   $$ \operatorname{tr} (P) = \operatorname{rank} (P)$$
+
+  \item (2 points) Prove, that for odd $n$ there is no $n \times n$ real invertible 
+  matrices $A$ and $B$ that satisfy $AB - BA = B^2A$.
+
+  \item (2 points) There are a lot of black and white balls and 
+  two of them in the bag: one black and one white. 
+  We perform the following actions: take out the ball, 
+  record its color and put back two balls of the same color. 
+  Such actions are performed three times. Considering such 
+  an experiment as random, describe the probability space $(\Omega, P)$, 
+  that is, the space of elementary outcomes $\Omega$ and 
+  the probability measure $P: 2^{\Omega} \rightarrow [0, 1]$ on it. 
+  What is the probability of getting a black ball on the third step?
+
+  \item (2 points) In a square $ABCD$ of area 1, we select a point $M$. 
+  Find the expected value of the area of triangle $ABM$.
+\end{enumerate}
+
+\end{document}

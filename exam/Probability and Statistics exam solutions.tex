@@ -1,0 +1,172 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+
+\usepackage[margin=0.5in]{geometry} % Adjust the margins of document here.
+
+\begin{document}
+
+\section*{Probability and Statistics (12 points max), August 8, 2023}
+
+\begin{enumerate}
+  \item (2 points) Explore the system and find the general solution depending on the value of the parameter $\lambda$:
+  \begin{align*}
+    \begin{cases}
+      (1 - \lambda)x_1 + x_2 + x_3 = \lambda \\
+      x_1 + (1 - \lambda)x_2 + x_3 = 2\lambda \\
+      x_1 + x_2 + (1 - \lambda)x_3 = 3\lambda
+    \end{cases}
+  \end{align*}
+
+  \textbf{Solution.} Rewrite equations to get 
+  $$ x_1 + x_2 + x_3 = (1+x_1)\lambda = (2+x_2)\lambda = (3+x_3)\lambda$$
+  If $\lambda = 0$, then $x_1 + x_2 + x_3 = 0$ is the only restriction, else
+  $$ x_2 = x_1-1,\ x_3 = x_1-2 $$
+  and substituting into the first equation, we get
+  $$ x_1 - \lambda x_1 + x_1-1 + x_1-2 = \lambda \Rightarrow x_1 = \frac{3+\lambda}{3-\lambda} $$
+  (Notice, that if $\lambda = 3$, than $0 = 6$, what is impossible.)
+
+  \item (2 points) Calculate the characteristic polynomial of the ``N-matrix'':
+  \[
+    \begin{pmatrix}
+      a & 1 & \cdots & 1 & a \\
+      a & a & \cdots & 1 & a \\
+      \vdots &  & \ddots & \vdots & \vdots \\
+      a & 1 & \cdots & a & a \\
+      a & 1 & \cdots & 1 & a
+      \end{pmatrix} \]
+
+  \textbf{Solution.} We need to calculate determinant of the following matrix.
+  Let's substract the first row from the others:
+  \[
+  \begin{bmatrix}
+    a-x & 1 & \cdots & 1 & a \\
+    a & a-x & \cdots & 1 & a \\
+    \vdots &  & \ddots & \vdots & \vdots \\
+    a & 1 & \cdots & a-x & a \\
+    a & 1 & \cdots & 1 & a-x
+  \end{bmatrix} =
+  \begin{bmatrix}
+    a-x & 1 & \cdots & 1 & a \\
+    x & a-x-1 & \cdots & 0 & 0 \\
+    \vdots &  & \ddots & \vdots & \vdots \\
+    x & 0 & \cdots & a-x-1 & 0 \\
+    x & 0 & \cdots & 0 & -x
+  \end{bmatrix}  
+  \] 
+  and then add $n-2$ intermediate columns, multiplied by $\frac{-x}{a-x-1}$, 
+  to the first column:
+  \[
+    \begin{bmatrix}
+      a-x-\frac{x(n-2)}{a-x-1}+a & 1 & \cdots & 1 & a \\
+      0 & a-x-1 & \cdots & 0 & 0 \\
+      \vdots &  & \ddots & \vdots & \vdots \\
+      0 & 0 & \cdots & a-x-1 & 0 \\
+      0 & 0 & \cdots & 0 & -x
+    \end{bmatrix} = -x(a-x-1)^{n-2}\left(2a - x - \frac{x(n-2)}{a-x-1}\right)
+  \]
+
+    
+  \item (2 points) Prove, that for any projector matrix (it is also called idempotent) $P$, i.e. $P^2 = P$:
+   $$ \operatorname{tr} (P) = \operatorname{rank} (P)$$
+
+   \textbf{Solution.} Observe that an idempotent matrix satisfies the equation 
+   $\lambda(1 - \lambda) = 0$. Hence the minimal polynomial is a product of 
+   linear factors and the matrix is diagonalizable. 
+   Therefore, the rank of the matrix equals the number of non-zero eigenvalues. 
+   Since the matrix has eigenvalues 0 or 1, this provides that 
+   the trace is equal to the number of unity eigenvalues, 
+   or non-zero eigenvalues.
+
+  \item (2 points) Prove, that for odd $n$ there is no $n \times n$ real invertible 
+  matrices $A$ and $B$ that satisfy $AB - BA = B^2A$.
+  
+  \textbf{Solution.} $AB - BA = B^2A \Rightarrow ABA^{-1} = B^2 + B \Rightarrow$ 
+  matrices $B$ and $B^2 + B$ are conjugated, in particular, their 
+  characteristic polynomials coincide.
+
+  Any polynomial of odd degree has real root, so $B$ has real eigenvalue. 
+  Let $\lambda$ be the maximal real eigenvalue of $B$, 
+  $\det B \neq 0 \Rightarrow \lambda \neq 0$. 
+
+  Let $v$ be eigenvector: $Bv = \lambda v \Rightarrow (B^2 + B)v = (\lambda^2 + \lambda)v$, i.e. 
+  $(\lambda^2 + \lambda)$ is eigenvalue of $B$, but $\lambda^2 + \lambda > \lambda$, 
+  contradiction with the maximum $\lambda$.
+
+  \item (2 points) There are a lot of black and white balls and 
+  two of them in the bag: one black and one white. 
+  We perform the following actions: take out the ball, 
+  record its color and put back two balls of the same color. 
+  Such actions are performed three times. Considering such 
+  an experiment as random, describe the probability space $(\Omega, P)$, 
+  that is, the space of elementary outcomes $\Omega$ and 
+  the probability measure $P: 2^{\Omega} \rightarrow [0, 1]$ on it. 
+  What is the probability of getting a white ball on the third step?
+
+  \textbf{Solution.} It is easy to see that the condition is symmetrical 
+  with respect to the permutation of white and black, so the answer is $\frac{1}{2}$.
+
+  \item (2 points) In a square $ABCD$ of area 1, we select a point $M$. 
+  Find the expected value of the area of triangle $BCM$.
+
+  \textbf{Solution.} Observe that sum of equally distributed random values $S_{ABM} + S_{BCM} + S_{CDM} + S_{DAM} = 1$. 
+  So, due to the linearity of the expectation, we get $\frac{1}{4}$ as the answer.
+\end{enumerate}
+
+\newpage
+\section*{Probability and Statistics (12 points max), August 8, 2023 — var 2}
+
+\begin{enumerate}
+  \item (2 points) Explore the system and find the general solution depending on the value of the parameter $\lambda$:
+  \begin{align*}
+    \begin{cases}
+      (1 - \lambda)x_1 + x_2 + x_3 = 3\lambda \\
+      x_1 + (1 - \lambda)x_2 + x_3 = 2\lambda \\
+      x_1 + x_2 + (1 - \lambda)x_3 = \lambda
+    \end{cases}
+  \end{align*}
+
+  \textbf{Solution.} Rewrite equations to get 
+  $$ x_1 + x_2 + x_3 = (3+x_1)\lambda = (2+x_2)\lambda = (1+x_3)\lambda$$
+  If $\lambda = 0$, then $x_1 + x_2 + x_3 = 0$ is the only restriction, else
+  $$ x_2 = x_3-1,\ x_1 = x_3-2 $$
+  and substituting into the third equation, we get
+  $$ x_3-2 + x_3-1 + x_3 - \lambda x_3 = \lambda \Rightarrow x_3 = \frac{3+\lambda}{3-\lambda} $$
+  (Notice, that if $\lambda = 3$, than $0 = 6$, what is impossible.)
+
+  \item (2 points) Calculate the characteristic polynomial of the ``N-matrix'':
+  \[
+    \begin{pmatrix}
+      a & 1 & \cdots & 1 & a \\
+      a & a & \cdots & 1 & a \\
+      \vdots &  & \ddots & \vdots & \vdots \\
+      a & 1 & \cdots & a & a \\
+      a & 1 & \cdots & 1 & a
+      \end{pmatrix}  \]  
+
+  \item (2 points) Prove, that for any projector matrix (it is also called idempotent) $P$, i.e. $P^2 = P$:
+   $$ \operatorname{tr} (P) = \operatorname{rank} (P)$$
+
+  \item (2 points) Prove, that for odd $n$ there is no $n \times n$ real invertible 
+  matrices $A$ and $B$ that satisfy $AB - BA = B^2A$.
+
+  \item (2 points) There are a lot of black and white balls and 
+  two of them in the bag: one black and one white. 
+  We perform the following actions: take out the ball, 
+  record its color and put back two balls of the same color. 
+  Such actions are performed three times. Considering such 
+  an experiment as random, describe the probability space $(\Omega, P)$, 
+  that is, the space of elementary outcomes $\Omega$ and 
+  the probability measure $P: 2^{\Omega} \rightarrow [0, 1]$ on it. 
+  What is the probability of getting a black ball on the third step?
+
+  \item (2 points) In a square $ABCD$ of area 1, we select a point $M$. 
+  Find the expected value of the area of triangle $ABM$.
+
+\end{enumerate}
+
+\end{document}
