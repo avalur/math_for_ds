@@ -1,0 +1,308 @@
+\documentclass[fullscreen=true, bookmarks=true, hyperref={pdfencoding=unicode}]{beamer}
+
+\usepackage[utf8]{inputenc}                                % Кодировка
+\usepackage[english,russian]{babel}                        % Переносы
+\usepackage{xcolor}                                        % Работа с цветом
+\usepackage{amsmath,amssymb,amsfonts}                      % Символы АМО
+\usepackage{graphicx}                                      % Графика
+\usepackage[labelsep=period]{caption}                      % Разделитель в подписях к рисункам и таблицам
+\usepackage{hhline}                                        % Для верстки линий в таблицах
+\usepackage[upright]{fourier}
+\usepackage{verbatim}
+\usepackage{tikz}                                          % Для простых рисунков в документе
+\usetikzlibrary{matrix,arrows,decorations.pathmorphing,
+shapes.geometric,calc,snakes,backgrounds,arrows.meta,3d}
+\usepackage{fancybox}                                      % Пакет для отрисовки рамок
+\usepackage{verbatim}                                      % Для вставки кода в презентацию
+\usepackage{xmpmulti}                                      % Для вставки gif в презентацию
+\usepackage{multirow}
+
+\usepackage{colortbl}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+\usepgfplotslibrary{colormaps}
+
+\graphicspath{{../images/}}                                % Путь до рисунков
+\setbeamertemplate{caption}[numbered]                      % Включение нумерации рисунков
+
+\definecolor{links}{HTML}{2A1B81}                          % blue for url links
+\hypersetup{colorlinks,linkcolor=,urlcolor=links}          % nothing for others
+
+\usetheme{Malmoe}
+\usecolortheme{seahorse}
+
+% l' unite
+\newcommand{\myunit}{0.5 cm}
+\tikzset{
+    node style sp/.style={draw,circle,minimum size=\myunit},
+    node style ge/.style={circle,minimum size=\myunit},
+    arrow style mul/.style={draw,sloped,midway,fill=white},
+    arrow style plus/.style={midway,sloped,fill=white},
+}
+\newcommand{\indep}{\perp \!\!\! \perp}
+
+% \setbeameroption{show notes}
+\setbeameroption{hide notes}
+
+\title{Lecture 10. Conditional probability and expectation}
+\author{Alex Avdiushenko}
+\institute{Neapolis University Paphos}
+\date{Bonus-2023}
+\titlegraphic{\includegraphics[keepaspectratio,width=0.25\textwidth]{nup_logo.png}}
+
+\setbeamercolor{background canvas}{bg=gray}
+\setbeamercolor{normal text}{fg=white}
+\setbeamercolor{structure}{fg=cyan}
+
+\begin{document}
+
+\begin{frame}
+\transdissolve[duration=0.2]
+\titlepage
+\end{frame}
+
+
+\begin{frame}{Conditional Probability Distribution}
+
+  \pause
+  \begin{definition}
+    Let $\xi$ and $\eta$ be two discrete random variables. Then
+    $$ P(\xi = a \mid \eta = b) = 
+    \begin{cases}
+      \frac{P(\xi = a,\ \eta = b)}{P(\eta = b)} \\
+      0, \text{ if } P(\eta = b) = 0
+    \end{cases} $$
+  \end{definition}
+  
+  \pause
+  Conditional Expectation is
+  $$\mathbb{E}(\xi\mid \eta = b) = \sum\limits_i a_i P(\xi = a_i \mid \eta = b) $$
+
+  \pause
+  Moreover
+  $$\sum\limits_b \mathbb{E}(\xi\mid \eta = b)P(\eta = b) = 
+  \sum\limits_{a,b} a P(\xi = a, \eta = b) = \sum\limits_{a} a P(\xi = a) = \mathbb{E} \xi$$
+
+\end{frame}
+
+
+\begin{frame}{Continuous Distribution}
+  \pause
+  \begin{definition}
+    Let $(\xi, \eta) \sim p_{\xi, \eta}(x, y)$. Then conditional density is
+    \[
+    p_{\xi \mid \eta = y} (x) = \frac{p_{\xi, \eta}(x, y)}{p_{\eta}(y)}
+    \]
+  \end{definition}
+    
+  \pause
+  Conditional Expectation is
+  $$\mathbb{E}(\xi\mid \eta = y) = \int\limits_{\mathbb{R}} x p_{\xi \mid \eta = y} (x) dx $$
+
+  \pause
+  Moreover
+  \begin{align*}
+    \mathbb{E} \xi = \int\limits_{\mathbb{R^2}} x p_{\xi, \eta}(x, y) dxdy &=
+    \int\limits_{\mathbb{R}} dy \left( \int\limits_{\mathbb{R}} x p_{\xi, \eta}(x, y) dx \right) =
+    \int\limits_{\mathbb{R}} \mathbb{E}(\xi\mid \eta = y) p_\eta(y) dy = \\
+    &= \mathbb{E}_\eta \left(\mathbb{E}(\xi\mid \eta = y)\right)    
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Example}
+  Let $(\Omega, P)$ is probability space and $\xi: \Omega \to \mathbb{R}$, 
+  $\chi_A: \Omega \to \mathbb{R}$ — indicator of $A\subseteq \Omega$. 
+  Find $\mathbb{E}(\xi\mid \chi_A = y)$.
+
+  \vspace{1cm}
+  \pause
+  If $X\subseteq \overline{A}$ then
+  $$ P(X\mid \chi_A = 0) = \frac{P(X)}{P(\overline{A})} $$
+
+  \pause
+  So $$\mathbb{E}(\xi\mid \chi_A = y) = \frac{\mathbb{E}(\xi, \chi_A = y)}{P(\chi_A = y)}$$
+\end{frame}
+
+
+\begin{frame}{Continuous Version of Bayes Formula}
+  \begin{definition}
+    Let $(\xi, \eta) \sim p_{\xi, \eta}(x, y)$. Then conditional density
+    \[
+      p_{\xi \mid \eta = y} (x) = p(x\mid y) = \frac{p(y\mid x)p(x)}{p(y)}
+    \]
+  \end{definition}
+
+\end{frame}
+
+
+\begin{frame}
+  \[
+    P(A \cap B \cap C) = P(A \mid B \cap C) P(B \mid C) P(C)
+  \]
+
+  \vspace{1cm}
+  For $\xi_1, \dots, \xi_n$ we have density $p(x_1, \dots, x_n)$ and
+  \[
+    p(x_1\ x_2\ \mid\ x_3\ x_4) = \frac{p(x_1\ x_2\ x_3\ x_4)}{p(x_3\ x_4)}
+  \]
+  and hence
+  \[
+    p(x_1\ x_2\ x_3) = p(x_1\mid x_2\ x_3) p(x_2\mid x_3) p(x_3)
+  \]
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Task 1}
+   Suppose we have a dice with $n$ faces, results are uniformly distribute.
+   We roll the dice until the sum of all the rolled results is greater than $n$. So
+   \begin{align*}
+    \Omega &= \left\{ (a_1, \dots, a_k) \mid \sum\limits_{i=1}^k a_i \geq n, \sum\limits_{i=1}^{k-1} a_i < n \right\} \\
+    &P(a_1, \dots, a_k) = \frac{1}{n^k} \\
+    &\xi(a_1, \dots, a_k) = k \text{ — number of dice rolls},\ \mathbb{E}\xi - ?
+   \end{align*}
+   
+   \pause
+   Consider new random variable $\eta_1 = \text{result of first dice roll}$
+   \[
+    \mathbb{E}\xi = \mathbb{E}_{\eta_1} \left(\mathbb{E}(\xi\mid \eta_1=a)\right) =
+    \sum\limits_{k=1}^n \mathbb{E}(\xi\mid \eta_1=k) P(\eta_1 = k)
+   \]
+
+   \pause
+   Now consider random variables $\xi_m = \text{number of dice rolls to get $m$ in sum}$, so $\xi = \xi_n$.
+\end{frame}
+
+
+\begin{frame}
+  \begin{align*}
+    &\mathbb{E}(\xi_n\mid \eta_1=k) = \mathbb{E}(1+\xi_{n-k}\mid \eta_1=k) =
+    \{\text{as } \xi_{n-k} \indep \eta_1 \} = \mathbb{E}(1 + \xi_{n-k}) \\
+    &\Rightarrow \mathbb{E}\xi_m = \frac{\mathbb{E}(1 + \xi_{m-1}) + \mathbb{E}(1 + \xi_{m-2}) + \dots + \mathbb{E}(1 + \xi_{m-n})}{n} =\\
+    &= \frac{n + \mathbb{E}\xi_{m-1} \dots + \mathbb{E}\xi_{1}}{n}
+  \end{align*}
+
+  \pause
+  If $a_k = \mathbb{E}\xi_k,\ a_1 = \mathbb{E}\xi_1 = 1$
+  \[
+    a_k = 1 + \frac{a_1 + \dots + a_{k-1}}{n} 
+    \Rightarrow a_k - a_{k-1} = \frac{a_{k-1}}{n}
+    \Rightarrow a_k = \left(1 + \frac{1}{n}\right) a_{k-1} = \left(1 + \frac{1}{n}\right)^{k-1}
+  \]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Task 2: casino}
+  \begin{columns}
+    \begin{column}{0.5\textwidth}
+      \begin{tikzpicture}[scale=1, auto,swap]
+        % draw the axes
+        \draw[->] (-1,0) -- (4,0) node[right] {$x$};
+        \draw[->] (0,-1) -- (0,5) node[above] {$y$};
+    
+        % draw the line y = N
+        \def\N{4} % choose the value for N here
+        \draw[dashed, color=blue] (-1,\N) node[above] {$y = N$} -- (4,\N);
+    
+        % draw the two arrows
+        \def\k{2} % choose the value for k here
+        \draw[->, color=green] (0,\k) -- (1,\k+1) node[left] {$p$};
+        \draw[->, color=red] (0,\k) -- (1,\k-1) node[left] {$1-p$};
+        
+        % label points
+        \node at (0,\k) [circle,fill,inner sep=1pt]{};
+        \node[left] at (0,\k) {$(0,k)$};
+        
+        \node at (1,\k+1) [circle,fill,inner sep=1pt]{};
+        \node[above right] at (1,\k+1) {$(1,k+1)$};
+        
+        \node at (1,\k-1) [circle,fill,inner sep=1pt]{};
+        \node[below right] at (1,\k-1) {$(1,k-1)$};
+      \end{tikzpicture}        
+    \end{column}
+    \begin{column}{0.5\textwidth}
+      If you are lucky to score $N$, then you win and leave. 
+      If you lose all the money to zero, then the game also ends.
+
+      What is $\Omega$ here?
+      All the paths!
+
+      \pause
+      \begin{block}{Question}
+        Find the average length of game $\mathbb{E}\xi_k$.
+      \end{block}
+    \end{column}
+  \end{columns}  
+\end{frame}
+
+
+\begin{frame}
+  $\mathbb{E}\xi_0 = \mathbb{E}\xi_N = 0$
+  \begin{align*}
+    &\mathbb{E}\xi_k = \mathbb{E}(\xi_k \mid \text{win})P(\text{win}) + 
+    \mathbb{E}(\xi_k \mid \text{lose})P(\text{lose}) = \\
+    &= \mathbb{E}(1 + \xi_{k+1} \mid \text{win})p + 
+    \mathbb{E}(1 + \xi_{k-1} \mid \text{lose})q = \\
+    &= 1 + p\mathbb{E}(\xi_{k+1}) + q\mathbb{E}(\xi_{k-1})
+  \end{align*}
+
+  \pause
+  Let column $x = (x_0, \dots, x_N) = (\mathbb{E}\xi_0, \dots, \mathbb{E}\xi_N)$
+  \[
+    \begin{bmatrix}
+    x_0 \\ x_1 \\ \vdots \\ \vdots \\ x_{N-1}\\ x_N
+    \end{bmatrix} =
+    \begin{bmatrix}
+    0 & 0 & \dots & \dots & 0 & 0 \\
+    q & 0 & p & 0 & \dots & 0 \\
+    0 & q & 0 & p & \dots & 0 \\
+    0 & 0 & \ddots & \ddots & \ddots & 0 \\
+    0 & \dots & 0 & q & 0 & p \\
+    0 & 0 & \dots & \dots & 0 & 0 
+  \end{bmatrix} 
+  \begin{bmatrix}
+    x_0 \\ x_1 \\ \vdots \\ \vdots \\ x_{N-1}\\ x_N    
+  \end{bmatrix} +
+  \begin{bmatrix}
+    0 \\ 1 \\ \vdots \\ \vdots \\ 1\\ 0
+  \end{bmatrix} 
+  \]
+
+  \pause
+  $x = Ax + b \Rightarrow \boxed{x = (I - A)^{-1} b}$
+\end{frame}
+
+
+\begin{frame}{Distribution of sum}
+  We can find it only for independent random variables $\xi \indep \eta$, 
+  or we must know joint probability distribution.
+
+  \pause
+  In discrete case
+  $$ P(\xi + \eta = a) = \sum\limits_{u+v = a} P(\xi = u) P(\eta = v) $$
+  And for integer values we have convolution
+  $$ P(\xi + \eta = k) = \sum\limits_{i \in \mathbb{Z}} p_i q_{k-i}$$
+\end{frame}
+
+
+\begin{frame}
+  For continuous case we have $\xi \sim p(x),\ \eta \sim q(y)$
+  \begin{align*}
+    &F_{\xi+\eta}(t) = P(\xi+\eta \leq t) = \int\limits_{x+y \leq t} p(x)q(y)dxdy = \\
+    &= \{x+y = u,\ y = v\} = \int\limits_{u \leq t} p(u-v)q(v)
+    \det \begin{bmatrix}
+      1 & -1 \\
+      0 & 1
+    \end{bmatrix} dudv = \\
+    &= \int\limits_{-\infty}^t du \int\limits_{\mathbb{R}} p(u-v)q(v) dv 
+  \end{align*}
+
+  \begin{align*}
+    &F'_{\xi+\eta}(t) = p_{\xi+\eta}(t) = \int\limits_{\mathbb{R}} p(t-v)q(v)dv
+    = \int\limits_{\mathbb{R}} p(u)q(t-u)du
+  \end{align*}
+
+\end{frame}
+
+\end{document}
